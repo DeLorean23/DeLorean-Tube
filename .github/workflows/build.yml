@@ -5,6 +5,8 @@ on:
     paths-ignore:
       - 'youtube/**'
       - '.github/workflows/youtube.yml'
+      - 'cloud/**'
+      - '.github/workflows/cloud.yml'
   workflow_dispatch:
 
 permissions:
