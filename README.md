@@ -1,51 +1,80 @@
-# AdBlock Browser
+# DeLorean Tube
 
-Android-Browser mit Werbeblocker, Popup-Sperre, Vollbild-Videos und Chromecast.
-32-bit-Build (armeabi-v7a), läuft ab Android 5.0.
+**Download:** unter **[Releases](../../releases)**
+
+YouTube-App für Android (ab Android 5.0), als zwei einzelne APKs: `DeLoreanTube-32bit.apk` (armeabi-v7a) und `DeLoreanTube-64bit.apk` (arm64-v8a).
 
 Created by DeLorean23
 
 ## Funktionen
 
-- Adressleiste (Adresse oder Suchbegriff → DuckDuckGo)
-- Werbeblocker: eingebaute Liste + große Filterliste (StevenBlack, ~80.000 Domains), wird beim ersten Start automatisch geladen, im Menü aktualisierbar
-- Popups und neue Fenster werden blockiert, `window.open` ist abgeschaltet
-- Sprünge in andere Apps (`intent:`, `market:`) werden blockiert
-- Strenger Umleitungs-Schutz: automatische Weiterleitung auf fremde Domains ohne Antippen wird blockiert (im Menü abschaltbar, falls eine Seite dadurch nicht mehr geht)
-- Videos im Vollbild (Querformat, Systemleisten ausgeblendet)
-- Downloads direkter Dateilinks mit Nachfrage, landen im Ordner „Download“
-- Chromecast: Cast-Symbol oben, sobald ein Chromecast im WLAN ist. Läuft ein Video und der Fernseher ist verbunden, fragt die App „Auf Fernseher“ oder „Hier abspielen“. Steuerung über Menü und Benachrichtigung
-- Bildschirm spiegeln als Ausweichlösung
+- **Mit Google anmelden** über die normale Google-Kontoauswahl (Konto antippen, fertig)
+- Mit Konto: Abo-Feed, Liste deiner Abos, deine Playlists, „Mag ich“-Videos, Abonnieren/Deabonnieren, Liken
+- Startseite mit Kategorien (Trends, Musik, Gaming, Live, Podcasts, Filme & Serien), Suche, Kanäle, Playlists
+- **Keine Werbung**: Videos werden direkt geladen, es wird gar keine Werbung abgerufen
+- **Hintergrund-Wiedergabe**: Ton läuft weiter, wenn die App im Hintergrund ist oder der Bildschirm aus ist
+  (Steuerung über Benachrichtigung und Sperrbildschirm). Im Hintergrund wird nur der Ton geladen.
+- Schalter **„Nur Ton“** (spart Daten), Qualitätsauswahl (getrennt für WLAN und mobile Daten)
+- **Download** mit Auswahl:
+  - **Audio (MP3)**, 192 kbit/s, mit Titel und Interpret → Ordner `Music/DeLorean Tube`
+  - **Video (MP4)** mit Nachfrage nach der Auflösung → Ordner `Movies/DeLorean Tube`
+- YouTube-Links aus anderen Apps öffnen oder über „Teilen“ an die App schicken
+- Lokaler Verlauf
+
+## Google-Login einrichten (einmalig, ca. 10 Minuten)
+
+Google erlaubt die Anmeldung nur für Apps, die in der Google Cloud Console eingetragen sind.
+Das ist kostenlos.
+
+1. https://console.cloud.google.com öffnen und mit deinem Google-Konto anmelden.
+2. Oben **Projekt auswählen → Neues Projekt**, Name z. B. `DeLorean Tube`, **Erstellen**.
+3. Links **APIs & Dienste → Bibliothek**, nach **YouTube Data API v3** suchen, **Aktivieren**.
+4. Links **APIs & Dienste → OAuth-Zustimmungsbildschirm** (bzw. **Google Auth Platform**):
+   - App-Name `DeLorean Tube`, deine E-Mail als Support- und Entwickler-Mail, Zielgruppe **Extern**.
+   - Unter **Zielgruppe / Testnutzer** deine Google-Mail-Adresse hinzufügen.
+   - Danach **App veröffentlichen** („In Produktion“), sonst musst du dich alle 7 Tage neu anmelden.
+     Beim Anmelden zeigt Google dann „Google hat diese App nicht überprüft“ → **Erweitert → Weiter zu DeLorean Tube**.
+5. Links **Clients** (bzw. **Anmeldedaten → Anmeldedaten erstellen → OAuth-Client-ID**):
+   - Anwendungstyp: **Android**
+   - Paketname: `de.delorean23.tube`
+   - SHA-1-Zertifikatsfingerabdruck:
+     ```
+     38:A3:F8:6F:E6:57:CE:9B:F9:F8:0F:49:A9:BF:C1:4F:80:F6:38:64
+     ```
+   - **Erstellen**. Eine Client-ID musst du nirgends eintragen, Google erkennt die App an Paketname + SHA-1.
+6. App öffnen → oben rechts aufs Konto-Symbol → Google-Konto auswählen → Zugriff erlauben.
+
+Der SHA-1 gehört zum Schlüssel `youtube/signing.jks` im Repo. Wird der Schlüssel ausgetauscht,
+muss der neue SHA-1 in Schritt 5 eingetragen werden.
 
 ## APK bauen
 
-### Variante A: GitHub (ohne Android Studio)
-1. Neues Repository auf GitHub anlegen und diesen Ordner hochladen.
-2. Der Workflow „APK bauen“ startet automatisch (Reiter **Actions**).
-3. Nach ca. 5 Minuten unten beim Lauf unter **Artifacts** `AdBlockBrowser-32bit` herunterladen und entpacken.
+Bei jedem Push baut GitHub Actions (Workflow **YouTube-App bauen**) automatisch die APK und
+veröffentlicht unter **Releases** die beiden einzelnen Dateien `DeLoreanTube-32bit.apk` und `DeLoreanTube-64bit.apk`.
 
-### Variante B: Android Studio
-1. Ordner in Android Studio öffnen und Gradle-Sync abwarten.
-2. **Build → Build App Bundle(s) / APK(s) → Build APK(s)**, oder im Terminal: `gradlew assembleRelease`
-3. APK liegt in `app/build/outputs/apk/release/app-release.apk`
+Android Studio: `gradlew :youtube:assembleRelease` → `youtube/build/outputs/apk/release/youtube-armeabi-v7a-release.apk` und `youtube-arm64-v8a-release.apk`
 
-Die APK ist mit dem Debug-Schlüssel signiert und lässt sich direkt installieren
-(„Installation aus unbekannten Quellen“ erlauben).
+## Grenzen
 
-## Grenzen bei Chromecast
-Der Chromecast holt das Video selbst aus dem Netz. Das klappt bei direkten MP4- und HLS-Videos.
-Bei verschlüsselten Streams (DRM), `blob:`-Playern oder Servern, die nur Anfragen mit
-bestimmten Headern annehmen, geht das nicht – dann im Menü „Bildschirm spiegeln“ nutzen.
+- Die Startseiten-Empfehlungen und der Wiedergabeverlauf deines Kontos sind über die offizielle
+  YouTube-Schnittstelle nicht abrufbar. Statt „Empfohlen“ gibt es die Kategorien und den Abo-Feed,
+  der Verlauf wird in der App gespeichert.
+- Kommentare werden nicht angezeigt.
+- Die MP3-Umwandlung läuft auf dem Handy; auf alten Geräten dauert ein 4-Minuten-Lied ca. 1–3 Minuten.
+- MP4 gibt es bis zur höchsten H.264-Qualität, die YouTube anbietet (meist 1080p). 1440p/4K liefert
+  YouTube nur als VP9/AV1, das passt nicht in eine normale MP4-Datei für alte Handys.
+- Ändert YouTube etwas an der Seite, muss die NewPipeExtractor-Version in `youtube/build.gradle`
+  aktualisiert werden (gleiche Version wie die aktuelle NewPipe-App).
+- Downloads nur für den privaten Gebrauch; YouTubes Nutzungsbedingungen erlauben Downloads eigentlich nicht.
 
-## Anpassen
-- App-Name: `app/src/main/res/values/strings.xml`
-- Eigene Werbe-Domains: `app/src/main/assets/adhosts.txt` (eine pro Zeile)
+## Bibliotheken
 
----
+- [NewPipeExtractor](https://github.com/TeamNewPipe/NewPipeExtractor) (GPL-3.0)
+- jump3r / LAME (Java-MP3-Encoder, LGPL, siehe `src/main/java/de/delorean23/tube/lame/COPYING-LGPL.txt`)
+- AndroidX Media3, Glide, OkHttp, Google Play Services Auth
 
-# DeLorean Tube (YouTube-App)
 
-Im Ordner [`youtube/`](youtube/README.md) liegt eine zweite App: YouTube mit Google-Login,
-Downloads (MP3 oder MP4 mit Auflösungsauswahl), ohne Werbung und mit Hintergrund-Wiedergabe.
-Sie wird vom Workflow **YouTube-App bauen** als `DeLoreanTube-32bit.apk` unter **Releases** veröffentlicht.
-Einrichtung des Google-Logins: siehe [`youtube/README.md`](youtube/README.md).
+## Weitere Apps von DeLorean23
+
+- [AdBlock Browser](https://github.com/DeLorean23/Browser-)
+- [DeLorean Cloud – Xbox Cloud Gaming Android App](https://github.com/DeLorean23/Xbox-Cloude-Gaming-Android-App-32bit)
