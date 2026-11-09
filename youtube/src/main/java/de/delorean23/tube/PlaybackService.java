@@ -11,6 +11,7 @@ import androidx.media3.common.C;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.Player;
+import androidx.media3.exoplayer.DefaultLoadControl;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.session.MediaSession;
 import androidx.media3.session.MediaSessionService;
@@ -36,6 +37,10 @@ public class PlaybackService extends MediaSessionService {
         super.onCreate();
         player = new ExoPlayer.Builder(this)
                 .setMediaSourceFactory(new TubeSources.SourceFactory())
+                // Puffer: startet nach 2,5 s, lädt bis 90 s voraus, nach einem Hänger erst ab 8 s weiter
+                .setLoadControl(new DefaultLoadControl.Builder()
+                        .setBufferDurationsMs(30_000, 90_000, 2_500, 8_000)
+                        .build())
                 .setAudioAttributes(new AudioAttributes.Builder()
                         .setUsage(C.USAGE_MEDIA)
                         .setContentType(C.AUDIO_CONTENT_TYPE_MOVIE)
