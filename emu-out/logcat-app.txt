@@ -1,0 +1,343 @@
+11-14 20:33:52.588 V/installd(  429): DexInv: --- END '/data/app/~~LWiAA_G2j9rl_0OQT8joyg==/de.delorean23.tube-sTxYEvmSN93rBZG73mZw4w==/base.apk' (success) ---
+11-14 20:33:52.662 V/BackupManagerService(  501): [UserID:0] restoreAtInstall pkg=de.delorean23.tube token=1 restoreSet=0
+11-14 20:33:53.139 I/GsaVoiceInteractionSrv( 1661): O received Intent { act=android.intent.action.PACKAGE_ADDED dat=package:de.delorean23.tube flg=0x4000010 (has extras) }
+11-14 20:33:53.140 I/MediaProvider( 1643): Invalidating LocalCallingIdentity cache for package de.delorean23.tube. Reason: package android.intent.action.PACKAGE_ADDED
+11-14 20:33:53.144 D/AvrcpMediaPlayerList(  698): Name of package changed: de.delorean23.tube
+11-14 20:33:53.721 I/ActivityTaskManager(  501): START u0 {flg=0x10000000 cmp=de.delorean23.tube/.MainActivity} from uid 2000
+11-14 20:33:53.824 I/ActivityManager(  501): Start proc 5255:de.delorean23.tube/u0a167 for pre-top-activity {de.delorean23.tube/de.delorean23.tube.MainActivity}
+11-14 20:33:54.130 I/TetheringManager( 5255): registerTetheringEventCallback:de.delorean23.tube
+11-14 20:33:54.167 D/ConnectivityService(  501): requestNetwork for uid/pid:10167/5255 NetworkRequest [ TRACK_DEFAULT id=40, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10167 AdministratorUids: [] RequestorUid: 10167 RequestorPackageName: de.delorean23.tube] ]
+11-14 20:33:54.168 D/UntrustedWifiNetworkFactory(  501): got request NetworkRequest [ TRACK_DEFAULT id=40, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10167 AdministratorUids: [] RequestorUid: 10167 RequestorPackageName: de.delorean23.tube] ] with score 60 and providerId 3
+11-14 20:33:54.168 D/WifiNetworkFactory(  501): got request NetworkRequest [ TRACK_DEFAULT id=40, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10167 AdministratorUids: [] RequestorUid: 10167 RequestorPackageName: de.delorean23.tube] ] with score 60 and providerId 3
+11-14 20:33:54.168 D/PhoneSwitcherNetworkRequstListener( 1022): got request NetworkRequest [ TRACK_DEFAULT id=40, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED Uid: 10167 AdministratorUids: [] RequestorUid: 10167 RequestorPackageName: de.delorean23.tube] ] with score 60 and providerId 3
+11-14 20:33:54.305 W/BroadcastQueue(  501): Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:de.delorean23.tube flg=0x4000010 (has extras) } to com.google.android.packageinstaller/com.android.packageinstaller.PackageInstalledReceiver
+11-14 20:33:54.305 W/BroadcastQueue(  501): Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:de.delorean23.tube flg=0x4000010 (has extras) } to com.google.android.gms/.games.chimera.GamesSystemBroadcastReceiverProxy
+11-14 20:33:54.305 W/BroadcastQueue(  501): Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:de.delorean23.tube flg=0x4000010 (has extras) } to com.google.android.gms/.gass.chimera.PackageChangeBroadcastReceiver
+11-14 20:33:54.305 W/BroadcastQueue(  501): Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:de.delorean23.tube flg=0x4000010 (has extras) } to com.google.android.gms/.chimera.GmsIntentOperationService$PersistentTrustedReceiver
+11-14 20:33:54.305 W/BroadcastQueue(  501): Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:de.delorean23.tube flg=0x4000010 (has extras) } to com.google.android.googlequicksearchbox/com.google.android.apps.gsa.googlequicksearchbox.GelStubAppWatcher
+11-14 20:33:54.305 W/BroadcastQueue(  501): Background execution not allowed: receiving Intent { act=android.intent.action.PACKAGE_ADDED dat=package:de.delorean23.tube flg=0x4000010 (has extras) } to com.google.android.ims/.receivers.RcsAutoStartReceiver
+11-14 20:33:54.716 I/ExoPlayerImpl( 5255): Init bccaacd [AndroidXMedia3/1.5.1] [generic_x86_64_arm64, sdk_gphone_x86_64, Google, 30]
+11-14 20:33:54.817 I/MediaSessionImpl( 5255): Init 1416685 [AndroidXMedia3/1.5.1] [generic_x86_64_arm64, sdk_gphone_x86_64, Google, 30]
+11-14 20:33:54.823 D/AvrcpMediaPlayerList(  698): onActiveSessionsChanged: controller: de.delorean23.tube
+11-14 20:33:54.853 I/AvrcpMediaPlayerList(  698): Adding wrapped media player: de.delorean23.tube at key: 1
+11-14 20:33:55.329 D/ArtManagerInternalImpl(  501): /data/misc/iorapd/de.delorean23.tube/7/de.delorean23.tube.MainActivity/compiled_traces/compiled_trace.pb doesn't exist
+11-14 20:33:55.335 I/ActivityTaskManager(  501): Displayed de.delorean23.tube/.MainActivity: +997ms
+11-14 20:33:55.579 I/ChromeSync( 1508): [Sync,SyncIntentOperation] Handling the intent: Intent { act=android.intent.action.PACKAGE_ADDED dat=package:de.delorean23.tube flg=0x4000010 cmp=com.google.android.gms/.chimera.GmsIntentOperationService (has extras) }.
+11-14 20:33:55.588 I/ChromeSync( 1508): [Persistence,AffiliationManager] One of affiliation or grouping data for android://phLWgrhOqd30xZh2BzlYdxadmp4RDOP8HkPwBQbuRFkpIcvscQjYqz7rvFiRPjFXXwQXyingbZy3XnwhenFubA==@de.delorean23.tube/ was not found. Marking affiliation data as stale...
+11-14 20:33:55.614 W/GCM     ( 1145): Unexpected forwarded intent: Intent { act=android.intent.action.PACKAGE_ADDED dat=package:de.delorean23.tube flg=0x4000010 cmp=com.google.android.gms/.chimera.PersistentIntentOperationService (has extras) }
+11-14 20:33:55.615 W/GCM     ( 1145): Unexpected forwarded intent: Intent { act=android.intent.action.PACKAGE_ADDED dat=package:de.delorean23.tube flg=0x4000010 cmp=com.google.android.gms/.chimera.PersistentIntentOperationService (has extras) }
+11-14 20:33:58.834 I/iorapd  (  430): Perfetto TraceBuffer saved to file: /data/misc/iorapd/de.delorean23.tube/7/de.delorean23.tube.MainActivity/raw_traces/1794688438831992758.perfetto_trace.pb
+11-14 20:33:59.408 D/ProfileInstaller( 5255): Installing profile for de.delorean23.tube
+11-14 20:34:10.613 D/AvrcpMediaPlayerList(  698): onActiveSessionsChanged: controller: de.delorean23.tube
+11-14 20:34:10.613 D/AvrcpMediaPlayerList(  698): Already have a controller for the player: de.delorean23.tube, updating instead
+11-14 20:34:25.013 D/AndroidRuntime( 5472): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:34:25.020 I/AndroidRuntime( 5472): Using default boot image
+11-14 20:34:25.020 I/AndroidRuntime( 5472): Leaving lock profiling enabled
+11-14 20:34:25.119 D/AndroidRuntime( 5472): Calling main entry com.android.commands.input.Input
+11-14 20:34:25.123 D/AndroidRuntime( 5472): Shutting down VM
+11-14 20:34:25.232 I/AndroidIME( 1431): AbstractIme.onActivate():84 LatinIme.onActivate() : EditorInfo = Package = de.delorean23.tube : Type = Text : Learning = Enable : Suggestion = Show : AutoCorrection = Enable : Microphone = Show : NoPersonalizedLearning = Disable : AutoStartVoiceInput = Disable, IncognitoMode = false
+11-14 20:34:27.625 D/AndroidRuntime( 5543): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:34:27.626 I/AndroidRuntime( 5543): Using default boot image
+11-14 20:34:27.626 I/AndroidRuntime( 5543): Leaving lock profiling enabled
+11-14 20:34:27.673 D/AndroidRuntime( 5543): Calling main entry com.android.commands.input.Input
+11-14 20:34:27.835 D/AndroidRuntime( 5543): Shutting down VM
+11-14 20:34:34.347 D/AndroidRuntime( 5692): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:34:34.348 I/AndroidRuntime( 5692): Using default boot image
+11-14 20:34:34.348 I/AndroidRuntime( 5692): Leaving lock profiling enabled
+11-14 20:34:34.418 D/AndroidRuntime( 5692): Calling main entry com.android.commands.input.Input
+11-14 20:34:34.440 D/AndroidRuntime( 5692): Shutting down VM
+11-14 20:34:46.049 W/MediaSessionCompat( 5782): Couldn't find a unique registered media button receiver in the given context.
+11-14 20:34:46.050 D/AvrcpMediaPlayerList(  698): onActiveSessionsChanged: controller: de.delorean23.tube
+11-14 20:34:46.050 D/AvrcpMediaPlayerList(  698): Already have a controller for the player: de.delorean23.tube, updating instead
+11-14 20:34:50.011 D/AndroidRuntime( 5881): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:34:50.013 I/AndroidRuntime( 5881): Using default boot image
+11-14 20:34:50.013 I/AndroidRuntime( 5881): Leaving lock profiling enabled
+11-14 20:34:50.054 D/AndroidRuntime( 5881): Calling main entry com.android.commands.input.Input
+11-14 20:34:50.962 D/AndroidRuntime( 5881): Shutting down VM
+11-14 20:34:54.524 D/AndroidRuntime( 5905): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:34:54.525 I/AndroidRuntime( 5905): Using default boot image
+11-14 20:34:54.525 I/AndroidRuntime( 5905): Leaving lock profiling enabled
+11-14 20:34:54.571 D/AndroidRuntime( 5905): Calling main entry com.android.commands.input.Input
+11-14 20:34:54.574 D/AndroidRuntime( 5905): Shutting down VM
+11-14 20:34:57.026 D/AndroidRuntime( 5972): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:34:57.027 I/AndroidRuntime( 5972): Using default boot image
+11-14 20:34:57.027 I/AndroidRuntime( 5972): Leaving lock profiling enabled
+11-14 20:34:57.086 D/AndroidRuntime( 5972): Calling main entry com.android.commands.input.Input
+11-14 20:34:57.089 D/AndroidRuntime( 5972): Shutting down VM
+11-14 20:34:57.099 I/ActivityTaskManager(  501): START u0 {cmp=de.delorean23.tube/.PlayerActivity (has extras)} from uid 10167
+11-14 20:34:57.182 I/ActivityTaskManager(  501): Displayed de.delorean23.tube/.PlayerActivity: +83ms
+11-14 20:34:57.428 W/MediaSessionStub( 5255): Session operation failed
+11-14 20:34:57.428 W/MediaSessionStub( 5255):   java.util.concurrent.ExecutionException: org.schabi.newpipe.extractor.exceptions.SignInConfirmNotBotException: YouTube probably temporarily blocked anonymous watch access with this IP , got error LOGIN_REQUIRED: "Sign in to confirm that you're not a bot"
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.AbstractFuture.getDoneValue(AbstractFuture.java:596)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.AbstractFuture.get(AbstractFuture.java:555)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.AbstractFuture$TrustedFuture.get(AbstractFuture.java:111)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at androidx.media3.session.MediaSessionStub.lambda$sendSessionResultWhenReady$2(MediaSessionStub.java:192)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at androidx.media3.session.MediaSessionStub$$ExternalSyntheticLambda76.accept(D8$$SyntheticClass:0)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at androidx.media3.session.MediaSessionStub.lambda$handleSessionTaskWhenReady$16(MediaSessionStub.java:433)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at androidx.media3.session.MediaSessionStub$$ExternalSyntheticLambda16.run(D8$$SyntheticClass:0)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.DirectExecutor.execute(DirectExecutor.java:31)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.AbstractFuture.executeListener(AbstractFuture.java:1300)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.AbstractFuture.complete(AbstractFuture.java:1061)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.AbstractFuture.setException(AbstractFuture.java:811)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.SettableFuture.setException(SettableFuture.java:55)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at androidx.media3.common.util.Util.lambda$transformFutureAsync$2(Util.java:877)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at androidx.media3.common.util.Util$$ExternalSyntheticLambda14.run(D8$$SyntheticClass:0)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.DirectExecutor.execute(DirectExecutor.java:31)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.AbstractFuture.executeListener(AbstractFuture.java:1300)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.AbstractFuture.complete(AbstractFuture.java:1061)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.AbstractFuture.setException(AbstractFuture.java:811)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.SettableFuture.setException(SettableFuture.java:55)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at de.delorean23.tube.PlaybackService$SessionCallback.lambda$onSetMediaItems$1(PlaybackService.java:501)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at de.delorean23.tube.PlaybackService$SessionCallback$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at java.lang.Thread.run(Thread.java:923)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):   Caused by: org.schabi.newpipe.extractor.exceptions.SignInConfirmNotBotException: YouTube probably temporarily blocked anonymous watch access with this IP , got error LOGIN_REQUIRED: "Sign in to confirm that you're not a bot"
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeStreamExtractor.checkPlayabilityStatus(YoutubeStreamExtractor.java:895)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeStreamExtractor.fetchVisionOsClient(YoutubeStreamExtractor.java:938)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeStreamExtractor.onFetchPage(YoutubeStreamExtractor.java:834)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at org.schabi.newpipe.extractor.Extractor.fetchPage(Extractor.java:65)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at org.schabi.newpipe.extractor.stream.StreamInfo.getInfo(StreamInfo.java:95)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at org.schabi.newpipe.extractor.stream.StreamInfo.getInfo(StreamInfo.java:89)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at org.schabi.newpipe.extractor.stream.StreamInfo.getInfo(StreamInfo.java:83)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at de.delorean23.tube.App.streamInfo(App.java:87)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at de.delorean23.tube.TubeSources.resolve(TubeSources.java:78)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       at de.delorean23.tube.PlaybackService$SessionCallback.lambda$onSetMediaItems$1(PlaybackService.java:497)
+11-14 20:34:57.428 W/MediaSessionStub( 5255):       ... 4 more
+11-14 20:34:57.429 W/MediaSessionImpl( 5255): UnsupportedOperationException: Make sure to implement MediaSession.Callback.onPlaybackResumption() if you add a media button receiver to your manifest or if you implement the recent media item contract with your MediaLibraryService.
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):   java.lang.UnsupportedOperationException
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSession$Callback$-CC.$default$onPlaybackResumption(MediaSession.java:1751)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at de.delorean23.tube.PlaybackService$SessionCallback.onPlaybackResumption(Unknown Source:0)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionImpl.handleMediaControllerPlayRequest(MediaSessionImpl.java:992)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionStub.lambda$playForControllerInfo$19$androidx-media3-session-MediaSessionStub(MediaSessionStub.java:740)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionStub$$ExternalSyntheticLambda34.accept(D8$$SyntheticClass:0)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionStub.lambda$sendSessionResultSuccess$0(MediaSessionStub.java:164)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionStub$$ExternalSyntheticLambda68.run(D8$$SyntheticClass:0)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionStub.lambda$sendSessionResultSuccess$1(MediaSessionStub.java:173)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionStub$$ExternalSyntheticLambda84.run(D8$$SyntheticClass:0)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionStub.lambda$queueSessionTaskWithPlayerCommandForControllerInfo$13(MediaSessionStub.java:343)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionStub$$ExternalSyntheticLambda40.run(D8$$SyntheticClass:0)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at androidx.media3.session.ConnectedControllersManager.lambda$flushCommandQueue$3$androidx-media3-session-ConnectedControllersManager(ConnectedControllersManager.java:295)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at androidx.media3.session.ConnectedControllersManager$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionImpl.lambda$callWithControllerForCurrentRequestSet$3$androidx-media3-session-MediaSessionImpl(MediaSessionImpl.java:356)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionImpl$$ExternalSyntheticLambda21.run(D8$$SyntheticClass:0)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at androidx.media3.common.util.Util.postOrRun(Util.java:798)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at androidx.media3.session.ConnectedControllersManager.flushCommandQueue(ConnectedControllersManager.java:289)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at androidx.media3.session.ConnectedControllersManager.lambda$flushCommandQueue$2$androidx-media3-session-ConnectedControllersManager(ConnectedControllersManager.java:300)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at androidx.media3.session.ConnectedControllersManager$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at com.google.common.util.concurrent.DirectExecutor.execute(DirectExecutor.java:31)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at com.google.common.util.concurrent.ImmediateFuture.addListener(ImmediateFuture.java:49)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at androidx.media3.session.ConnectedControllersManager.lambda$flushCommandQueue$3$androidx-media3-session-ConnectedControllersManager(ConnectedControllersManager.java:296)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at androidx.media3.session.ConnectedControllersManager$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionImpl.lambda$callWithControllerForCurrentRequestSet$3$androidx-media3-session-MediaSessionImpl(MediaSessionImpl.java:356)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionImpl$$ExternalSyntheticLambda21.run(D8$$SyntheticClass:0)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at android.os.Handler.handleCallback(Handler.java:938)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at android.os.Handler.dispatchMessage(Handler.java:99)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at android.os.Looper.loop(Looper.java:223)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at android.app.ActivityThread.main(ActivityThread.java:7656)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at java.lang.reflect.Method.invoke(Native Method)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:592)
+11-14 20:34:57.429 W/MediaSessionImpl( 5255):       at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:947)
+11-14 20:34:57.432 I/MediaFocusControl(  501): requestAudioFocus() from uid/pid 10167/5255 clientId=android.media.AudioManager@75a5d36androidx.media3.exoplayer.AudioFocusManager$AudioFocusListener@7a45437 callingPack=de.delorean23.tube req=1 flags=0x0 sdk=35
+11-14 20:35:27.618 D/AndroidRuntime( 6012): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:35:27.619 I/AndroidRuntime( 6012): Using default boot image
+11-14 20:35:27.619 I/AndroidRuntime( 6012): Leaving lock profiling enabled
+11-14 20:35:27.666 D/AndroidRuntime( 6012): Calling main entry com.android.commands.input.Input
+11-14 20:35:27.979 D/AndroidRuntime( 6012): Shutting down VM
+11-14 20:35:30.490 D/AndroidRuntime( 6031): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:35:30.491 I/AndroidRuntime( 6031): Using default boot image
+11-14 20:35:30.491 I/AndroidRuntime( 6031): Leaving lock profiling enabled
+11-14 20:35:30.533 D/AndroidRuntime( 6031): Calling main entry com.android.commands.input.Input
+11-14 20:35:30.535 D/AndroidRuntime( 6031): Shutting down VM
+11-14 20:35:37.099 D/AndroidRuntime( 6051): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:35:37.100 I/AndroidRuntime( 6051): Using default boot image
+11-14 20:35:37.100 I/AndroidRuntime( 6051): Leaving lock profiling enabled
+11-14 20:35:37.142 D/AndroidRuntime( 6051): Calling main entry com.android.commands.input.Input
+11-14 20:35:37.144 D/AndroidRuntime( 6051): Shutting down VM
+11-14 20:35:39.600 D/AndroidRuntime( 6067): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:35:39.601 I/AndroidRuntime( 6067): Using default boot image
+11-14 20:35:39.601 I/AndroidRuntime( 6067): Leaving lock profiling enabled
+11-14 20:35:39.642 D/AndroidRuntime( 6067): Calling main entry com.android.commands.input.Input
+11-14 20:35:39.644 D/AndroidRuntime( 6067): Shutting down VM
+11-14 20:35:46.172 D/AndroidRuntime( 6090): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:35:46.173 I/AndroidRuntime( 6090): Using default boot image
+11-14 20:35:46.173 I/AndroidRuntime( 6090): Leaving lock profiling enabled
+11-14 20:35:46.219 D/AndroidRuntime( 6090): Calling main entry com.android.commands.input.Input
+11-14 20:35:46.222 D/AndroidRuntime( 6090): Shutting down VM
+11-14 20:35:46.230 I/ActivityTaskManager(  501): START u0 {cmp=de.delorean23.tube/.DownloadsActivity} from uid 10167
+11-14 20:35:46.257 I/ActivityTaskManager(  501): Displayed de.delorean23.tube/.DownloadsActivity: +26ms
+11-14 20:35:50.743 D/AndroidRuntime( 6120): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:35:50.744 I/AndroidRuntime( 6120): Using default boot image
+11-14 20:35:50.744 I/AndroidRuntime( 6120): Leaving lock profiling enabled
+11-14 20:35:50.785 D/AndroidRuntime( 6120): Calling main entry com.android.commands.input.Input
+11-14 20:35:50.793 D/AndroidRuntime( 6120): Shutting down VM
+11-14 20:35:53.251 D/AndroidRuntime( 6133): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:35:53.252 I/AndroidRuntime( 6133): Using default boot image
+11-14 20:35:53.252 I/AndroidRuntime( 6133): Leaving lock profiling enabled
+11-14 20:35:53.300 D/AndroidRuntime( 6133): Calling main entry com.android.commands.uiautomator.Launcher
+11-14 20:35:54.327 D/AndroidRuntime( 6133): Shutting down VM
+11-14 20:35:54.789 D/AndroidRuntime( 6151): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:35:54.790 I/AndroidRuntime( 6151): Using default boot image
+11-14 20:35:54.790 I/AndroidRuntime( 6151): Leaving lock profiling enabled
+11-14 20:35:54.832 D/AndroidRuntime( 6151): Calling main entry com.android.commands.input.Input
+11-14 20:35:54.834 D/AndroidRuntime( 6151): Shutting down VM
+11-14 20:35:54.846 I/ActivityTaskManager(  501): START u0 {cmp=de.delorean23.tube/.AlarmsActivity} from uid 10167
+11-14 20:35:54.872 I/ActivityTaskManager(  501): Displayed de.delorean23.tube/.AlarmsActivity: +26ms
+11-14 20:35:58.396 D/AndroidRuntime( 6178): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:35:58.397 I/AndroidRuntime( 6178): Using default boot image
+11-14 20:35:58.397 I/AndroidRuntime( 6178): Leaving lock profiling enabled
+11-14 20:35:58.438 D/AndroidRuntime( 6178): Calling main entry com.android.commands.input.Input
+11-14 20:35:58.442 D/AndroidRuntime( 6178): Shutting down VM
+11-14 20:36:00.958 D/AndroidRuntime( 6198): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:36:00.959 I/AndroidRuntime( 6198): Using default boot image
+11-14 20:36:00.959 I/AndroidRuntime( 6198): Leaving lock profiling enabled
+11-14 20:36:01.008 D/AndroidRuntime( 6198): Calling main entry com.android.commands.input.Input
+11-14 20:36:01.011 D/AndroidRuntime( 6198): Shutting down VM
+11-14 20:36:02.464 D/AndroidRuntime( 6211): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:36:02.465 I/AndroidRuntime( 6211): Using default boot image
+11-14 20:36:02.465 I/AndroidRuntime( 6211): Leaving lock profiling enabled
+11-14 20:36:02.506 D/AndroidRuntime( 6211): Calling main entry com.android.commands.input.Input
+11-14 20:36:02.545 D/AndroidRuntime( 6211): Shutting down VM
+11-14 20:36:04.999 D/AndroidRuntime( 6225): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:36:05.000 I/AndroidRuntime( 6225): Using default boot image
+11-14 20:36:05.000 I/AndroidRuntime( 6225): Leaving lock profiling enabled
+11-14 20:36:05.040 D/AndroidRuntime( 6225): Calling main entry com.android.commands.uiautomator.Launcher
+11-14 20:36:06.054 D/AndroidRuntime( 6225): Shutting down VM
+11-14 20:36:06.512 D/AndroidRuntime( 6243): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:36:06.513 I/AndroidRuntime( 6243): Using default boot image
+11-14 20:36:06.513 I/AndroidRuntime( 6243): Leaving lock profiling enabled
+11-14 20:36:06.553 D/AndroidRuntime( 6243): Calling main entry com.android.commands.input.Input
+11-14 20:36:06.556 D/AndroidRuntime( 6243): Shutting down VM
+11-14 20:36:06.563 I/ActivityTaskManager(  501): START u0 {cmp=de.delorean23.tube/.SettingsActivity} from uid 10167
+11-14 20:36:06.591 I/ActivityTaskManager(  501): Displayed de.delorean23.tube/.SettingsActivity: +27ms
+11-14 20:36:10.078 D/AndroidRuntime( 6267): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:36:10.079 I/AndroidRuntime( 6267): Using default boot image
+11-14 20:36:10.079 I/AndroidRuntime( 6267): Leaving lock profiling enabled
+11-14 20:36:10.120 D/AndroidRuntime( 6267): Calling main entry com.android.commands.input.Input
+11-14 20:36:10.431 D/AndroidRuntime( 6267): Shutting down VM
+11-14 20:36:12.945 D/AndroidRuntime( 6284): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:36:12.946 I/AndroidRuntime( 6284): Using default boot image
+11-14 20:36:12.946 I/AndroidRuntime( 6284): Leaving lock profiling enabled
+11-14 20:36:12.987 D/AndroidRuntime( 6284): Calling main entry com.android.commands.input.Input
+11-14 20:36:12.994 D/AndroidRuntime( 6284): Shutting down VM
+11-14 20:36:15.448 D/AndroidRuntime( 6297): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:36:15.449 I/AndroidRuntime( 6297): Using default boot image
+11-14 20:36:15.449 I/AndroidRuntime( 6297): Leaving lock profiling enabled
+11-14 20:36:15.490 D/AndroidRuntime( 6297): Calling main entry com.android.commands.input.Input
+11-14 20:36:15.492 D/AndroidRuntime( 6297): Shutting down VM
+11-14 20:36:18.003 D/AndroidRuntime( 6315): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:36:18.004 I/AndroidRuntime( 6315): Using default boot image
+11-14 20:36:18.004 I/AndroidRuntime( 6315): Leaving lock profiling enabled
+11-14 20:36:18.045 D/AndroidRuntime( 6315): Calling main entry com.android.commands.input.Input
+11-14 20:36:18.048 D/AndroidRuntime( 6315): Shutting down VM
+11-14 20:36:19.498 D/AndroidRuntime( 6328): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:36:19.499 I/AndroidRuntime( 6328): Using default boot image
+11-14 20:36:19.499 I/AndroidRuntime( 6328): Leaving lock profiling enabled
+11-14 20:36:19.539 D/AndroidRuntime( 6328): Calling main entry com.android.commands.input.Input
+11-14 20:36:19.542 D/AndroidRuntime( 6328): Shutting down VM
+11-14 20:36:19.546 I/ActivityTaskManager(  501): START u0 {cmp=de.delorean23.tube/.ShortsActivity} from uid 10167
+11-14 20:36:19.570 I/ExoPlayerImpl( 5255): Init 16f5326 [AndroidXMedia3/1.5.1] [generic_x86_64_arm64, sdk_gphone_x86_64, Google, 30]
+11-14 20:36:19.668 I/ActivityTaskManager(  501): Displayed de.delorean23.tube/.ShortsActivity: +122ms
+11-14 20:36:20.960 I/chatty  ( 5255): uid=10167(de.delorean23.tube) FinalizerDaemon identical 1 line
+11-14 20:36:23.806 W/NotificationService(  501): Toast already killed. pkg=de.delorean23.tube token=android.os.BinderProxy@34df8fe
+11-14 20:37:00.066 D/AndroidRuntime( 6374): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:37:00.067 I/AndroidRuntime( 6374): Using default boot image
+11-14 20:37:00.067 I/AndroidRuntime( 6374): Leaving lock profiling enabled
+11-14 20:37:00.108 D/AndroidRuntime( 6374): Calling main entry com.android.commands.input.Input
+11-14 20:37:00.115 D/AndroidRuntime( 6374): Shutting down VM
+11-14 20:37:00.184 I/ExoPlayerImpl( 5255): Release 16f5326 [AndroidXMedia3/1.5.1] [generic_x86_64_arm64, sdk_gphone_x86_64, Google, 30] [media3.common, media3.ui, media3.session, media3.exoplayer, media3.decoder]
+11-14 20:37:03.546 I/ActivityTaskManager(  501): START u0 {act=android.intent.action.VIEW dat=https://www.youtube.com/... flg=0x10000000 cmp=de.delorean23.tube/.PlayerActivity} from uid 2000
+11-14 20:37:03.591 I/ActivityTaskManager(  501): Displayed de.delorean23.tube/.PlayerActivity: +44ms
+11-14 20:37:03.915 W/MediaSessionStub( 5255): Session operation failed
+11-14 20:37:03.915 W/MediaSessionStub( 5255):   java.util.concurrent.ExecutionException: org.schabi.newpipe.extractor.exceptions.SignInConfirmNotBotException: YouTube probably temporarily blocked anonymous watch access with this IP , got error LOGIN_REQUIRED: "Sign in to confirm that you're not a bot"
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.AbstractFuture.getDoneValue(AbstractFuture.java:596)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.AbstractFuture.get(AbstractFuture.java:555)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.AbstractFuture$TrustedFuture.get(AbstractFuture.java:111)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at androidx.media3.session.MediaSessionStub.lambda$sendSessionResultWhenReady$2(MediaSessionStub.java:192)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at androidx.media3.session.MediaSessionStub$$ExternalSyntheticLambda76.accept(D8$$SyntheticClass:0)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at androidx.media3.session.MediaSessionStub.lambda$handleSessionTaskWhenReady$16(MediaSessionStub.java:433)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at androidx.media3.session.MediaSessionStub$$ExternalSyntheticLambda16.run(D8$$SyntheticClass:0)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.DirectExecutor.execute(DirectExecutor.java:31)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.AbstractFuture.executeListener(AbstractFuture.java:1300)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.AbstractFuture.complete(AbstractFuture.java:1061)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.AbstractFuture.setException(AbstractFuture.java:811)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.SettableFuture.setException(SettableFuture.java:55)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at androidx.media3.common.util.Util.lambda$transformFutureAsync$2(Util.java:877)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at androidx.media3.common.util.Util$$ExternalSyntheticLambda14.run(D8$$SyntheticClass:0)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.DirectExecutor.execute(DirectExecutor.java:31)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.AbstractFuture.executeListener(AbstractFuture.java:1300)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.AbstractFuture.complete(AbstractFuture.java:1061)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.AbstractFuture.setException(AbstractFuture.java:811)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at com.google.common.util.concurrent.SettableFuture.setException(SettableFuture.java:55)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at de.delorean23.tube.PlaybackService$SessionCallback.lambda$onSetMediaItems$1(PlaybackService.java:501)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at de.delorean23.tube.PlaybackService$SessionCallback$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at java.lang.Thread.run(Thread.java:923)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):   Caused by: org.schabi.newpipe.extractor.exceptions.SignInConfirmNotBotException: YouTube probably temporarily blocked anonymous watch access with this IP , got error LOGIN_REQUIRED: "Sign in to confirm that you're not a bot"
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeStreamExtractor.checkPlayabilityStatus(YoutubeStreamExtractor.java:895)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeStreamExtractor.fetchVisionOsClient(YoutubeStreamExtractor.java:938)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeStreamExtractor.onFetchPage(YoutubeStreamExtractor.java:834)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at org.schabi.newpipe.extractor.Extractor.fetchPage(Extractor.java:65)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at org.schabi.newpipe.extractor.stream.StreamInfo.getInfo(StreamInfo.java:95)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at org.schabi.newpipe.extractor.stream.StreamInfo.getInfo(StreamInfo.java:89)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at org.schabi.newpipe.extractor.stream.StreamInfo.getInfo(StreamInfo.java:83)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at de.delorean23.tube.App.streamInfo(App.java:87)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at de.delorean23.tube.TubeSources.resolve(TubeSources.java:78)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       at de.delorean23.tube.PlaybackService$SessionCallback.lambda$onSetMediaItems$1(PlaybackService.java:497)
+11-14 20:37:03.915 W/MediaSessionStub( 5255):       ... 4 more
+11-14 20:37:03.916 W/MediaSessionImpl( 5255): UnsupportedOperationException: Make sure to implement MediaSession.Callback.onPlaybackResumption() if you add a media button receiver to your manifest or if you implement the recent media item contract with your MediaLibraryService.
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):   java.lang.UnsupportedOperationException
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSession$Callback$-CC.$default$onPlaybackResumption(MediaSession.java:1751)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at de.delorean23.tube.PlaybackService$SessionCallback.onPlaybackResumption(Unknown Source:0)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionImpl.handleMediaControllerPlayRequest(MediaSessionImpl.java:992)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionStub.lambda$playForControllerInfo$19$androidx-media3-session-MediaSessionStub(MediaSessionStub.java:740)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionStub$$ExternalSyntheticLambda34.accept(D8$$SyntheticClass:0)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionStub.lambda$sendSessionResultSuccess$0(MediaSessionStub.java:164)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionStub$$ExternalSyntheticLambda68.run(D8$$SyntheticClass:0)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionStub.lambda$sendSessionResultSuccess$1(MediaSessionStub.java:173)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionStub$$ExternalSyntheticLambda84.run(D8$$SyntheticClass:0)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionStub.lambda$queueSessionTaskWithPlayerCommandForControllerInfo$13(MediaSessionStub.java:343)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionStub$$ExternalSyntheticLambda40.run(D8$$SyntheticClass:0)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at androidx.media3.session.ConnectedControllersManager.lambda$flushCommandQueue$3$androidx-media3-session-ConnectedControllersManager(ConnectedControllersManager.java:295)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at androidx.media3.session.ConnectedControllersManager$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionImpl.lambda$callWithControllerForCurrentRequestSet$3$androidx-media3-session-MediaSessionImpl(MediaSessionImpl.java:356)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionImpl$$ExternalSyntheticLambda21.run(D8$$SyntheticClass:0)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at androidx.media3.common.util.Util.postOrRun(Util.java:798)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at androidx.media3.session.ConnectedControllersManager.flushCommandQueue(ConnectedControllersManager.java:289)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at androidx.media3.session.ConnectedControllersManager.lambda$flushCommandQueue$2$androidx-media3-session-ConnectedControllersManager(ConnectedControllersManager.java:300)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at androidx.media3.session.ConnectedControllersManager$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at com.google.common.util.concurrent.DirectExecutor.execute(DirectExecutor.java:31)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at com.google.common.util.concurrent.ImmediateFuture.addListener(ImmediateFuture.java:49)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at androidx.media3.session.ConnectedControllersManager.lambda$flushCommandQueue$3$androidx-media3-session-ConnectedControllersManager(ConnectedControllersManager.java:296)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at androidx.media3.session.ConnectedControllersManager$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionImpl.lambda$callWithControllerForCurrentRequestSet$3$androidx-media3-session-MediaSessionImpl(MediaSessionImpl.java:356)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at androidx.media3.session.MediaSessionImpl$$ExternalSyntheticLambda21.run(D8$$SyntheticClass:0)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at android.os.Handler.handleCallback(Handler.java:938)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at android.os.Handler.dispatchMessage(Handler.java:99)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at android.os.Looper.loop(Looper.java:223)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at android.app.ActivityThread.main(ActivityThread.java:7656)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at java.lang.reflect.Method.invoke(Native Method)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:592)
+11-14 20:37:03.916 W/MediaSessionImpl( 5255):       at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:947)
+11-14 20:37:33.707 D/AndroidRuntime( 6411): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:37:33.708 I/AndroidRuntime( 6411): Using default boot image
+11-14 20:37:33.708 I/AndroidRuntime( 6411): Leaving lock profiling enabled
+11-14 20:37:33.748 D/AndroidRuntime( 6411): Calling main entry com.android.commands.input.Input
+11-14 20:37:33.752 D/AndroidRuntime( 6411): Shutting down VM
+11-14 20:37:39.320 W/ActivityManager(  501): Foreground service started from background can not have location/camera/microphone access: service de.delorean23.tube/.AlarmService
+11-14 20:37:39.321 I/ActivityTaskManager(  501): START u0 {flg=0x10000000 cmp=de.delorean23.tube/.AlarmActivity} from uid 10167
+11-14 20:37:39.322 W/ActivityTaskManager(  501): Background activity start [callingPackage: de.delorean23.tube; callingUid: 10167; isCallingUidForeground: false; callingUidHasAnyVisibleWindow: false; callingUidProcState: FOREGROUND_SERVICE; isCallingUidPersistentSystemProcess: false; realCallingUid: 10167; isRealCallingUidForeground: false; realCallingUidHasAnyVisibleWindow: false; realCallingUidProcState: FOREGROUND_SERVICE; isRealCallingUidPersistentSystemProcess: false; originatingPendingIntent: null; isBgStartWhitelisted: false; intent: Intent { flg=0x10000000 cmp=de.delorean23.tube/.AlarmActivity }; callerApp: ProcessRecord{59fa0f9 5255:de.delorean23.tube/u0a167}]
+11-14 20:37:39.376 D/MediaSessionService(  501): Media button session is changed to de.delorean23.tube/androidx.media3.session.id. (userId=0)
+11-14 20:37:39.378 I/AvrcpMediaPlayerList(  698): onMediaKeyEventSessionChanged: token=de.delorean23.tube
+11-14 20:37:39.384 D/AvrcpMediaPlayerList(  698): setActivePlayer(): setting player to de.delorean23.tube
+11-14 20:37:39.387 D/AvrcpMediaPlayerList(  698): onActiveSessionsChanged: controller: de.delorean23.tube
+11-14 20:37:39.387 D/AvrcpMediaPlayerList(  698): Already have a controller for the player: de.delorean23.tube, updating instead
+11-14 20:37:39.524 D/InterruptionStateProvider(  718): No bubble up: not allowed to bubble: 0|de.delorean23.tube|7700|null|10167
+11-14 20:37:39.541 W/NotifBindPipeline(  718): Row is not set so pipeline will not run. notif = 0|de.delorean23.tube|7700|null|10167
+11-14 20:37:39.596 D/InterruptionStateProvider(  718): No bubble up: not allowed to bubble: 0|de.delorean23.tube|7700|null|10167
+11-14 20:37:47.487 D/AndroidRuntime( 6471): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+11-14 20:37:47.488 I/AndroidRuntime( 6471): Using default boot image
+11-14 20:37:47.488 I/AndroidRuntime( 6471): Leaving lock profiling enabled
+11-14 20:37:47.545 D/AndroidRuntime( 6471): Calling main entry com.android.commands.uiautomator.Launcher
+11-14 20:37:48.561 D/AndroidRuntime( 6471): Shutting down VM

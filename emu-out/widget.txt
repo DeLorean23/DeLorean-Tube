@@ -1,0 +1,4 @@
+  [12] provider ProviderId{user:0, app:10167, cmp:ComponentInfo{de.delorean23.tube/de.delorean23.tube.TubeWidget}}
+    min=(64001x10241)   minResize=(46081x10241) updatePeriodMillis=0 resizeMode=1 widgetCategory=1 autoAdvanceViewId=-1 initialLayout=#7f0d0062 initialKeyguardLayout=#0 zombie=false
+ 
+Widgets:

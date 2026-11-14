@@ -1,0 +1,152 @@
+4 services found:
+  Service #0:
+    priority=0 preferredOrder=0 match=0x108000 specificIndex=-1 isDefault=false
+    ServiceInfo:
+      name=com.google.android.apps.youtube.music.mediabrowser.MusicBrowserService
+      packageName=com.google.android.apps.youtube.music
+      enabled=true exported=true directBootAware=false
+      permission=null
+      flags=0x0
+      ApplicationInfo:
+        name=com.google.android.apps.youtube.music.application.YouTubeMusicApplication
+        packageName=com.google.android.apps.youtube.music
+        labelRes=0x7f1300c4 nonLocalizedLabel=null icon=0x7f10001c banner=0x0
+        className=com.google.android.apps.youtube.music.application.YouTubeMusicApplication
+        processName=com.google.android.apps.youtube.music
+        taskAffinity=com.google.android.apps.youtube.music
+        uid=10139 flags=0x30d9be45 privateFlags=0xac081110 theme=0x7f140366
+        requiresSmallestWidthDp=0 compatibleWidthLimitDp=0 largestWidthLimitDp=0
+        sourceDir=/product/app/YouTubeMusicPrebuilt/YouTubeMusicPrebuilt.apk
+        seinfo=default:targetSdkVersion=29
+        seinfoUser=:complete
+        dataDir=/data/user/0/com.google.android.apps.youtube.music
+        deviceProtectedDataDir=/data/user_de/0/com.google.android.apps.youtube.music
+        credentialProtectedDataDir=/data/user/0/com.google.android.apps.youtube.music
+        sharedLibraryFiles=[/system/framework/android.test.base.jar, /system/framework/org.apache.http.legacy.jar]
+        enabled=true minSdkVersion=21 targetSdkVersion=29 versionCode=36951280 targetSandboxVersion=1
+        supportsRtl=true
+        fullBackupContent=true
+        crossProfile=false
+        networkSecurityConfigRes=0x7f160007
+        category=1
+        HiddenApiEnforcementPolicy=2
+        usesNonSdkApi=false
+        allowsPlaybackCapture=true
+  Service #1:
+    priority=0 preferredOrder=0 match=0x108000 specificIndex=-1 isDefault=false
+    ServiceInfo:
+      name=com.google.android.apps.gsa.staticplugins.mediabrowser.PodcastsMediaBrowserService
+      packageName=com.google.android.googlequicksearchbox
+      labelRes=0x7f140b15 nonLocalizedLabel=null icon=0x7f100011 banner=0x0
+      processName=com.google.android.googlequicksearchbox:search
+      enabled=true exported=true directBootAware=false
+      permission=null
+      flags=0x0
+      ApplicationInfo:
+        name=com.google.android.apps.gsa.binaries.velvet.app.VelvetRoot_Application
+        packageName=com.google.android.googlequicksearchbox
+        labelRes=0x7f140130 nonLocalizedLabel=null icon=0x7f100006 banner=0x0
+        className=com.google.android.apps.gsa.binaries.velvet.app.VelvetRoot_Application
+        processName=com.google.android.googlequicksearchbox
+        taskAffinity=com.google.android.googlequicksearchbox
+        uid=10123 flags=0x30dbbe45 privateFlags=0x8c080418 theme=0x7f150688
+        requiresSmallestWidthDp=0 compatibleWidthLimitDp=0 largestWidthLimitDp=0
+        sourceDir=/product/priv-app/Velvet/Velvet.apk
+        seinfo=default:privapp:targetSdkVersion=29
+        seinfoUser=:complete
+        dataDir=/data/user/0/com.google.android.googlequicksearchbox
+        deviceProtectedDataDir=/data/user_de/0/com.google.android.googlequicksearchbox
+        credentialProtectedDataDir=/data/user/0/com.google.android.googlequicksearchbox
+        sharedLibraryFiles=[/system/framework/android.test.base.jar, /system/framework/org.apache.http.legacy.jar]
+        enabled=true minSdkVersion=21 targetSdkVersion=29 versionCode=301090655 targetSandboxVersion=1
+        manageSpaceActivityName=com.google.android.apps.gsa.managespace.VelvetManageSpaceActivity
+        supportsRtl=true
+        fullBackupContent=true
+        crossProfile=true
+        networkSecurityConfigRes=0x7f17004f
+        HiddenApiEnforcementPolicy=2
+        usesNonSdkApi=false
+        allowsPlaybackCapture=true
+  Service #2:
+    priority=0 preferredOrder=0 match=0x108000 specificIndex=-1 isDefault=false
+    ServiceInfo:
+      name=com.google.android.apps.youtube.app.extensions.mediabrowser.impl.MainAppMediaBrowserService
+      packageName=com.google.android.youtube
+      enabled=true exported=true directBootAware=false
+      permission=null
+      flags=0x0
+      ApplicationInfo:
+        name=com.google.android.apps.youtube.app.YouTubeApplication
+        packageName=com.google.android.youtube
+        labelRes=0x7f130122 nonLocalizedLabel=null icon=0x7f10000a banner=0x0
+        className=com.google.android.apps.youtube.app.YouTubeApplication
+        processName=com.google.android.youtube
+        taskAffinity=com.google.android.youtube
+        uid=10147 flags=0x30dbbe45 privateFlags=0xac081010 theme=0x7f14040c
+        requiresSmallestWidthDp=0 compatibleWidthLimitDp=0 largestWidthLimitDp=0
+        sourceDir=/product/app/YouTube/YouTube.apk
+        seinfo=default:targetSdkVersion=29
+        seinfoUser=:complete
+        dataDir=/data/user/0/com.google.android.youtube
+        deviceProtectedDataDir=/data/user_de/0/com.google.android.youtube
+        credentialProtectedDataDir=/data/user/0/com.google.android.youtube
+        sharedLibraryFiles=[/system/framework/android.test.base.jar, /system/framework/org.apache.http.legacy.jar, /system_ext/framework/androidx.window.sidecar.jar]
+        enabled=true minSdkVersion=21 targetSdkVersion=29 versionCode=1512439280 targetSandboxVersion=1
+        supportsRtl=true
+        fullBackupContent=true
+        crossProfile=false
+        networkSecurityConfigRes=0x7f160006
+        category=2
+        HiddenApiEnforcementPolicy=2
+        usesNonSdkApi=false
+        allowsPlaybackCapture=true
+  Service #3:
+    priority=0 preferredOrder=0 match=0x108000 specificIndex=-1 isDefault=false
+    ServiceInfo:
+      name=de.delorean23.tube.PlaybackService
+      packageName=de.delorean23.tube
+      labelRes=0x0 nonLocalizedLabel=DeLorean Tube icon=0x0 banner=0x0
+      enabled=true exported=true directBootAware=false
+      permission=null
+      flags=0x0
+      ApplicationInfo:
+        name=de.delorean23.tube.App
+        packageName=de.delorean23.tube
+        labelRes=0x7f0f001c nonLocalizedLabel=null icon=0x7f080138 banner=0x7f080050
+        className=de.delorean23.tube.App
+        processName=de.delorean23.tube
+        taskAffinity=de.delorean23.tube
+        uid=10167 flags=0x30d8be44 privateFlags=0x8c001010 theme=0x7f100006
+        requiresSmallestWidthDp=0 compatibleWidthLimitDp=0 largestWidthLimitDp=0
+        sourceDir=/data/app/~~LWiAA_G2j9rl_0OQT8joyg==/de.delorean23.tube-sTxYEvmSN93rBZG73mZw4w==/base.apk
+        seinfo=default:targetSdkVersion=30
+        seinfoUser=:complete
+        dataDir=/data/user/0/de.delorean23.tube
+        deviceProtectedDataDir=/data/user_de/0/de.delorean23.tube
+        credentialProtectedDataDir=/data/user/0/de.delorean23.tube
+        enabled=true minSdkVersion=21 targetSdkVersion=35 versionCode=7 targetSandboxVersion=1
+        supportsRtl=true
+        fullBackupContent=true
+        crossProfile=false
+        HiddenApiEnforcementPolicy=2
+        usesNonSdkApi=false
+        allowsPlaybackCapture=true
+          Category: "android.intent.category.LEANBACK_LAUNCHER"
+
+  MIME Typed Actions:
+--
+          Action: "androidx.media3.session.MediaLibraryService"
+          Action: "androidx.media3.session.MediaSessionService"
+          Action: "android.media.browse.MediaBrowserService"
+      androidx.media3.session.MediaLibraryService:
+        d3b3a5e de.delorean23.tube/.PlaybackService filter b4ae3f
+          Action: "androidx.media3.session.MediaLibraryService"
+          Action: "androidx.media3.session.MediaSessionService"
+          Action: "android.media.browse.MediaBrowserService"
+      android.media.browse.MediaBrowserService:
+        d3b3a5e de.delorean23.tube/.PlaybackService filter b4ae3f
+          Action: "androidx.media3.session.MediaLibraryService"
+          Action: "androidx.media3.session.MediaSessionService"
+          Action: "android.media.browse.MediaBrowserService"
+
+Permissions:
