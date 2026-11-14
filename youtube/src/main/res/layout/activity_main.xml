@@ -153,6 +153,21 @@
                 android:visibility="gone" />
         </LinearLayout>
 
+        <!-- Suchvorschläge und Suchverlauf -->
+        <ScrollView
+            android:id="@+id/suggestScroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bg"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/suggestBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
+
         <ProgressBar
             android:id="@+id/progress"
             android:layout_width="40dp"

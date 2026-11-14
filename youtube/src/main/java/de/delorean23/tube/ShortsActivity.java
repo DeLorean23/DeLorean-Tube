@@ -363,6 +363,35 @@ public class ShortsActivity extends AppCompatActivity {
         });
     }
 
+    /** Fernbedienung: hoch/runter = voriges/nächstes Short, OK = Pause. */
+    @Override
+    public boolean dispatchKeyEvent(android.view.KeyEvent e) {
+        if (e.getAction() == android.view.KeyEvent.ACTION_DOWN) {
+            View f = getCurrentFocus();
+            boolean onButton = f != null && f.getId() != R.id.sTouch && !(f instanceof RecyclerView)
+                    && Tv.isTv(this) && e.getKeyCode() == android.view.KeyEvent.KEYCODE_DPAD_CENTER;
+            switch (e.getKeyCode()) {
+                case android.view.KeyEvent.KEYCODE_DPAD_DOWN:
+                case android.view.KeyEvent.KEYCODE_CHANNEL_DOWN:
+                    if (current + 1 < adapter.getItemCount()) pager.smoothScrollToPosition(current + 1);
+                    return true;
+                case android.view.KeyEvent.KEYCODE_DPAD_UP:
+                case android.view.KeyEvent.KEYCODE_CHANNEL_UP:
+                    if (current > 0) pager.smoothScrollToPosition(current - 1);
+                    return true;
+                case android.view.KeyEvent.KEYCODE_DPAD_CENTER:
+                case android.view.KeyEvent.KEYCODE_ENTER:
+                case android.view.KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+                    if (onButton) break;
+                    togglePause();
+                    return true;
+                default:
+                    break;
+            }
+        }
+        return super.dispatchKeyEvent(e);
+    }
+
     private void togglePause() {
         if (currentHolder == null) return;
         if (player.isPlaying()) {

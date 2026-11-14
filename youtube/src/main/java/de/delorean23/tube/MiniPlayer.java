@@ -135,6 +135,8 @@ public final class MiniPlayer {
     }
 
     private void close() {
+        PlayQueue.clear();
+        SleepTimer.cancel();
         if (controller != null) {
             controller.stop();
             controller.clearMediaItems();

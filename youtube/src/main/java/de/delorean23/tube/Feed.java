@@ -114,6 +114,10 @@ public final class Feed {
                                         .format(new java.util.Date(cur.published));
                             } catch (Exception ignored) {
                             }
+                        } else if ("link".equals(name)) {
+                            // Shorts haben im Feed einen /shorts/-Link
+                            String href = p.getAttributeValue(null, "href");
+                            if (href != null && href.contains("/shorts/")) cur.shorts = true;
                         } else if ("media:thumbnail".equals(name) || "thumbnail".equals(name)) {
                             cur.thumb = p.getAttributeValue(null, "url");
                         } else if ("media:statistics".equals(name) || "statistics".equals(name)) {

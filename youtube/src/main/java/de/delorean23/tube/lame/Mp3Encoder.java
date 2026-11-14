@@ -35,8 +35,26 @@ public final class Mp3Encoder {
     private final int channels;
     private byte[] mp3buf = new byte[0];
 
+    /** Ohne Cover/Album (alte Aufrufe). */
     public Mp3Encoder(int sampleRate, int channels, int bitrateKbps,
                       String title, String artist, OutputStream out) throws IOException {
+        this(sampleRate, channels, bitrateKbps, new Tags(title, artist), out);
+    }
+
+    /** Titel, Interpret, Album, Titelnummer und Cover-Bild (JPEG) für die MP3. */
+    public static final class Tags {
+        public String title, artist, album;
+        public int track;
+        public byte[] coverJpeg;
+
+        public Tags(String title, String artist) {
+            this.title = title;
+            this.artist = artist;
+        }
+    }
+
+    public Mp3Encoder(int sampleRate, int channels, int bitrateKbps,
+                      Tags tags, OutputStream out) throws IOException {
         this.out = out;
         this.channels = channels <= 1 ? 1 : 2;
 
@@ -82,17 +100,32 @@ public final class Mp3Encoder {
 
         id3.id3tag_init(gfp);
         // Titel/Interpret selbst als ID3v2 (UTF-16) schreiben: volle Länge, Umlaute richtig
-        writeId3v2(out, title, artist);
+        writeId3v2(out, tags);
 
         int rc = lame.lame_init_params(gfp);
         if (rc < 0) throw new IOException("LAME init fehlgeschlagen (" + rc + ")");
     }
 
-    private static void writeId3v2(OutputStream out, String title, String artist) throws IOException {
+    private static void writeId3v2(OutputStream out, Tags t) throws IOException {
         java.io.ByteArrayOutputStream frames = new java.io.ByteArrayOutputStream();
-        textFrame(frames, "TIT2", title);
-        textFrame(frames, "TPE1", artist);
+        textFrame(frames, "TIT2", t.title);
+        textFrame(frames, "TPE1", t.artist);
+        textFrame(frames, "TALB", t.album);
+        if (t.track > 0) textFrame(frames, "TRCK", String.valueOf(t.track));
         textFrame(frames, "TENC", "DeLorean Tube");
+        if (t.coverJpeg != null && t.coverJpeg.length > 0) {
+            // APIC: Cover-Bild (Typ 3 = Vorderseite)
+            byte[] mime = "image/jpeg".getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);
+            int len = 1 + mime.length + 1 + 1 + 1 + t.coverJpeg.length;
+            frames.write("APIC".getBytes(java.nio.charset.StandardCharsets.ISO_8859_1));
+            frames.write(new byte[]{(byte) (len >> 24), (byte) (len >> 16), (byte) (len >> 8), (byte) len, 0, 0});
+            frames.write(0);          // Text-Kodierung ISO-8859-1
+            frames.write(mime);
+            frames.write(0);
+            frames.write(3);          // Cover (vorne)
+            frames.write(0);          // leere Beschreibung
+            frames.write(t.coverJpeg);
+        }
         byte[] body = frames.toByteArray();
         int size = body.length;
         out.write(new byte[]{'I', 'D', '3', 3, 0, 0,

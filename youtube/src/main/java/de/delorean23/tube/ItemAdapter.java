@@ -77,6 +77,35 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return items.size();
     }
 
+    public List<Item> items() {
+        return items;
+    }
+
+    /** Adapter-Position -> Index in der Liste (ohne Kopfteil), -1 = Kopfteil. */
+    public int indexOf(int adapterPosition) {
+        int i = adapterPosition - off();
+        return i >= 0 && i < items.size() ? i : -1;
+    }
+
+    public void move(int from, int to) {
+        if (from < 0 || to < 0 || from >= items.size() || to >= items.size()) return;
+        Item it = items.remove(from);
+        items.add(to, it);
+        notifyItemMoved(from + off(), to + off());
+    }
+
+    public Item removeAt(int index) {
+        if (index < 0 || index >= items.size()) return null;
+        Item it = items.remove(index);
+        notifyItemRemoved(index + off());
+        return it;
+    }
+
+    /** Nach "Weiterschauen"-Änderungen die Balken neu zeichnen. */
+    public void refreshProgress() {
+        notifyItemRangeChanged(off(), items.size());
+    }
+
     private int off() {
         return header != null ? 1 : 0;
     }
@@ -111,6 +140,7 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     static final class Holder extends RecyclerView.ViewHolder {
         final ImageView thumb;
         final TextView title, subtitle, duration;
+        final android.widget.ProgressBar watched;
 
         Holder(View v) {
             super(v);
@@ -120,6 +150,7 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             title = v.findViewById(R.id.title);
             subtitle = v.findViewById(R.id.subtitle);
             duration = v.findViewById(R.id.duration);
+            watched = v.findViewById(R.id.watched);
         }
     }
 
@@ -136,6 +167,7 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
         int layout = viewType == T_VIDEO ? R.layout.item_video : R.layout.item_row;
         View v = LayoutInflater.from(parent.getContext()).inflate(layout, parent, false);
+        v.setFocusable(true); // Fernbedienung
         return new Holder(v);
     }
 
@@ -177,6 +209,16 @@ public class ItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         } else {
             Glide.with(activity).clear(h.thumb);
             h.thumb.setImageDrawable(null);
+        }
+        if (h.watched != null) {
+            // roter Balken: so weit wurde das Video schon geschaut
+            float f = it.type == Item.VIDEO ? Positions.fraction(it.url) : -1;
+            if (f > 0.01f) {
+                h.watched.setVisibility(View.VISIBLE);
+                h.watched.setProgress((int) (f * 1000));
+            } else {
+                h.watched.setVisibility(View.GONE);
+            }
         }
         h.itemView.setOnClickListener(v -> click.onItem(it));
         h.itemView.setOnLongClickListener(v -> {

@@ -2,6 +2,7 @@ package de.delorean23.tube;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
@@ -22,6 +23,7 @@ import java.util.concurrent.Executors;
 public class App extends Application {
 
     public static final String CH_DOWNLOAD = "downloads";
+    public static final String CH_ALARM = "alarm";
 
     private static App instance;
     /** Hintergrund-Threads mit großem Stack (die JavaScript-Auswertung von YouTube braucht viel). */
@@ -51,7 +53,7 @@ public class App extends Application {
         instance = this;
         CrashLog.install(this);
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
-            @Override public void onActivityStarted(Activity a) { started++; }
+            @Override public void onActivityStarted(Activity a) { started++; Tv.install(a); }
             @Override public void onActivityStopped(Activity a) { started = Math.max(0, started - 1); }
             @Override public void onActivityCreated(Activity a, Bundle b) { }
             @Override public void onActivityResumed(Activity a) { }
@@ -66,6 +68,11 @@ public class App extends Application {
             NotificationChannel ch = new NotificationChannel(CH_DOWNLOAD,
                     getString(R.string.downloads), NotificationManager.IMPORTANCE_LOW);
             nm.createNotificationChannel(ch);
+            NotificationChannel al = new NotificationChannel(CH_ALARM, "Wecker",
+                    NotificationManager.IMPORTANCE_HIGH);
+            al.setSound(null, null);
+            al.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            nm.createNotificationChannel(al);
         }
     }
 

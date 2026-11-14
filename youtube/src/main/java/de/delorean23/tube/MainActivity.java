@@ -62,6 +62,10 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout chips;
     private TextView[] tabs;
     private MiniPlayer mini;
+    private View suggestScroll;
+    private LinearLayout suggestBox;
+    private int suggestToken;
+    private final Runnable suggestRunnable = this::loadSuggestions;
 
     private int tab = TAB_HOME;
     private int loadToken = 0;
@@ -100,6 +104,9 @@ public class MainActivity extends AppCompatActivity {
         list.setLayoutManager(ItemAdapter.layout(this, adapter));
         list.setAdapter(adapter);
         adapter.setOnNearEnd(this::loadMore);
+        adapter.setOnLongClick(this::longPress);
+        suggestScroll = findViewById(R.id.suggestScroll);
+        suggestBox = findViewById(R.id.suggestBox);
 
         refresh.setColorSchemeResources(R.color.accent);
         refresh.setProgressBackgroundColorSchemeResource(R.color.card);
@@ -131,6 +138,18 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
+        searchField.addTextChangedListener(new android.text.TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence c, int a, int b, int d) { }
+            @Override public void onTextChanged(CharSequence c, int a, int b, int d) { }
+            @Override public void afterTextChanged(android.text.Editable e) {
+                if (searchBar.getVisibility() != View.VISIBLE) return;
+                App.MAIN.removeCallbacks(suggestRunnable);
+                App.MAIN.postDelayed(suggestRunnable, 250);
+            }
+        });
+        searchField.setOnFocusChangeListener((v, has) -> {
+            if (has && searchBar.getVisibility() == View.VISIBLE) loadSuggestions();
+        });
         btnAccount.setOnClickListener(v -> accountMenu());
         emptyButton.setOnClickListener(v -> login());
 
@@ -151,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         mini.onResume();
         updateAccountButton();
+        adapter.refreshProgress();
         if (tab == TAB_LIB) load(false);
     }
 
@@ -174,6 +194,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if (suggestScroll.getVisibility() == View.VISIBLE && tab == TAB_SEARCH) {
+            suggestScroll.setVisibility(View.GONE);
+            hideKeyboard();
+            return;
+        }
         if (searchBar.getVisibility() == View.VISIBLE) {
             showSearch(false);
             return;
@@ -226,17 +251,21 @@ public class MainActivity extends AppCompatActivity {
 
     private void accountMenu() {
         if (!Account.isLoggedIn()) {
-            login();
+            new AlertDialog.Builder(this)
+                    .setItems(new String[]{"Mit Google anmelden", "Einstellungen"}, (d, which) -> {
+                        if (which == 0) login();
+                        else startActivity(new Intent(this, SettingsActivity.class));
+                    })
+                    .show();
             return;
         }
         new AlertDialog.Builder(this)
                 .setTitle(Account.name() != null ? Account.name() : "Google-Konto")
-                .setItems(new String[]{"Meine Abos", "Verlauf löschen", "Abmelden"}, (d, which) -> {
+                .setItems(new String[]{"Meine Abos", "Einstellungen", "Abmelden"}, (d, which) -> {
                     if (which == 0) {
                         startActivity(ListActivity.intent(this, ListActivity.MODE_SUBS, null, "Meine Abos"));
                     } else if (which == 1) {
-                        History.clear();
-                        if (tab == TAB_LIB) load(false);
+                        startActivity(new Intent(this, SettingsActivity.class));
                     } else {
                         Account.logout();
                         updateAccountButton();
@@ -255,6 +284,7 @@ public class MainActivity extends AppCompatActivity {
             topBar.setVisibility(View.VISIBLE);
             hideKeyboard();
         }
+        suggestScroll.setVisibility(View.GONE);
         tab = t;
         for (int i = 0; i < tabs.length; i++) {
             tabs[i].setAlpha(i == t ? 1f : 0.55f);
@@ -272,8 +302,10 @@ public class MainActivity extends AppCompatActivity {
             searchField.requestFocus();
             InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
             imm.showSoftInput(searchField, InputMethodManager.SHOW_IMPLICIT);
+            loadSuggestions();
         } else {
             hideKeyboard();
+            suggestScroll.setVisibility(View.GONE);
             searchBar.setVisibility(View.GONE);
             topBar.setVisibility(View.VISIBLE);
             if (tab == TAB_SEARCH) selectTab(TAB_HOME);
@@ -294,6 +326,9 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         hideKeyboard();
+        SearchHistory.add(q);
+        suggestScroll.setVisibility(View.GONE);
+        searchField.clearFocus();
         tab = TAB_SEARCH;
         try {
             StreamingService yt = ServiceList.YouTube;
@@ -312,11 +347,27 @@ public class MainActivity extends AppCompatActivity {
                 case "app:history":
                     startActivity(ListActivity.intent(this, ListActivity.MODE_HISTORY, null, it.title));
                     break;
+                case "app:wl":
+                    startActivity(ListActivity.intent(this, ListActivity.MODE_LOCAL_PLAYLIST,
+                            LocalPlaylists.WATCH_LATER, it.title));
+                    break;
                 case "app:liked":
                     startActivity(ListActivity.intent(this, ListActivity.MODE_LIKED, null, it.title));
                     break;
                 case "app:subs":
                     startActivity(ListActivity.intent(this, ListActivity.MODE_SUBS, null, it.title));
+                    break;
+                case "app:new":
+                    PlaylistDialogs.create(this, null, () -> load(false));
+                    break;
+                case "app:downloads":
+                    startActivity(new Intent(this, DownloadsActivity.class));
+                    break;
+                case "app:settings":
+                    startActivity(new Intent(this, SettingsActivity.class));
+                    break;
+                case "app:alarms":
+                    startActivity(new Intent(this, AlarmsActivity.class));
                     break;
                 default:
                     break;
@@ -324,15 +375,110 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         if (it.type == Item.VIDEO) {
+            PlayQueue.playSingle(it);
             startActivity(PlayerActivity.intent(this, it.url, it));
         } else if (it.type == Item.CHANNEL) {
             startActivity(ListActivity.intent(this, ListActivity.MODE_CHANNEL, it.url, it.title));
+        } else if (it.localPlaylistId != null) {
+            startActivity(ListActivity.intent(this, ListActivity.MODE_LOCAL_PLAYLIST,
+                    it.localPlaylistId, it.title));
         } else if (it.apiPlaylistId != null) {
             startActivity(ListActivity.intent(this, ListActivity.MODE_API_PLAYLIST,
                     it.apiPlaylistId, it.title));
         } else {
             startActivity(ListActivity.intent(this, ListActivity.MODE_PLAYLIST, it.url, it.title));
         }
+    }
+
+    /** Langes Drücken: Video-Menü oder eigene Playlist verwalten. */
+    private void longPress(Item it) {
+        if (it.type == Item.VIDEO) {
+            VideoMenu.show(this, it);
+        } else if (it.type == Item.PLAYLIST && (it.localPlaylistId != null
+                || (it.apiPlaylistId != null && tab == TAB_LIB))) {
+            PlaylistDialogs.manage(this, it, () -> load(false));
+        }
+    }
+
+    // ------------------------------------------------------------ Suchvorschläge
+
+    private void loadSuggestions() {
+        if (searchBar.getVisibility() != View.VISIBLE) return;
+        final String q = searchField.getText().toString().trim();
+        final int token = ++suggestToken;
+        if (q.isEmpty()) {
+            showSuggestions(SearchHistory.all(), true);
+            return;
+        }
+        // passende Einträge aus dem Verlauf sofort, Vorschläge von YouTube dazu
+        final List<String> fromHistory = new ArrayList<>();
+        for (String h : SearchHistory.all()) {
+            if (h.toLowerCase(java.util.Locale.ROOT).startsWith(q.toLowerCase(java.util.Locale.ROOT))) {
+                fromHistory.add(h);
+            }
+            if (fromHistory.size() >= 3) break;
+        }
+        showSuggestions(fromHistory, true);
+        App.IO.execute(() -> {
+            try {
+                List<String> sugg = ServiceList.YouTube.getSuggestionExtractor().suggestionList(q);
+                App.MAIN.post(() -> {
+                    if (token != suggestToken) return;
+                    List<String> all = new ArrayList<>(fromHistory);
+                    for (String x : sugg) if (!all.contains(x)) all.add(x);
+                    showSuggestions(all, false, fromHistory.size());
+                });
+            } catch (Throwable ignored) {
+            }
+        });
+    }
+
+    private void showSuggestions(List<String> list, boolean allHistory) {
+        showSuggestions(list, allHistory, allHistory ? list.size() : 0);
+    }
+
+    /** Die ersten historyCount Einträge kommen aus dem Suchverlauf (Uhr-Symbol, löschbar). */
+    private void showSuggestions(List<String> list, boolean unused, int historyCount) {
+        suggestBox.removeAllViews();
+        if (list.isEmpty()) {
+            suggestScroll.setVisibility(View.GONE);
+            return;
+        }
+        for (int i = 0; i < list.size() && i < 15; i++) {
+            final String q = list.get(i);
+            final boolean hist = i < historyCount;
+            TextView t = new TextView(this);
+            t.setText(q);
+            t.setTextSize(16);
+            t.setTextColor(getResources().getColor(R.color.text));
+            t.setGravity(android.view.Gravity.CENTER_VERTICAL);
+            t.setPadding(dp(16), 0, dp(16), 0);
+            t.setMinHeight(dp(48));
+            t.setCompoundDrawablesWithIntrinsicBounds(hist ? R.drawable.ic_history : R.drawable.ic_search, 0, 0, 0);
+            t.setCompoundDrawablePadding(dp(16));
+            t.setBackgroundResource(android.R.drawable.list_selector_background);
+            t.setOnClickListener(v -> {
+                searchField.setText(q);
+                searchField.setSelection(q.length());
+                search(q);
+            });
+            if (hist) {
+                t.setOnLongClickListener(v -> {
+                    new AlertDialog.Builder(this)
+                            .setMessage("„" + q + "“ aus dem Suchverlauf löschen?")
+                            .setPositiveButton("Löschen", (d, w) -> {
+                                SearchHistory.remove(q);
+                                loadSuggestions();
+                            })
+                            .setNegativeButton("Abbrechen", null)
+                            .show();
+                    return true;
+                });
+            }
+            suggestBox.addView(t, new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        }
+        suggestScroll.setVisibility(View.VISIBLE);
     }
 
     // ------------------------------------------------------------ Kategorien
@@ -416,7 +562,9 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         if (tab == TAB_LIB) {
-            showList(libraryItems());
+            List<Item> base = libraryItems();
+            base.addAll(libraryFooter());
+            showList(base);
             if (Account.isLoggedIn()) {
                 App.IO.execute(() -> {
                     try {
@@ -425,6 +573,7 @@ public class MainActivity extends AppCompatActivity {
                             if (token != loadToken) return;
                             List<Item> all = libraryItems();
                             all.addAll(pls);
+                            all.addAll(libraryFooter());
                             showList(all);
                         });
                     } catch (Throwable e) {
@@ -446,7 +595,8 @@ public class MainActivity extends AppCompatActivity {
                     for (StreamInfoItem s : info.getRelatedItems()) addItem(result, s);
                     kioskPage = info.hasNextPage() ? info.getNextPage() : null;
                 } else if (tab == TAB_SUBS) {
-                    result.addAll(Feed.load(force));
+                    boolean hide = Playback.hideShortsInFeed();
+                    for (Item it : Feed.load(force)) if (!hide || !it.shorts) result.add(it);
                 } else if (tab == TAB_SEARCH) {
                     SearchInfo info = SearchInfo.getInfo(ServiceList.YouTube, searchQuery);
                     for (InfoItem ii : info.getRelatedItems()) addItem(result, ii);
@@ -514,10 +664,21 @@ public class MainActivity extends AppCompatActivity {
     private List<Item> libraryItems() {
         List<Item> l = new ArrayList<>();
         l.add(libItem("app:history", "Verlauf", R.drawable.ic_history));
+        l.add(libItem("app:wl", "Später ansehen", R.drawable.ic_watch_later));
+        l.add(libItem("app:downloads", "Downloads", R.drawable.ic_download));
         if (Account.isLoggedIn()) {
             l.add(libItem("app:liked", "Mag ich", R.drawable.ic_like));
             l.add(libItem("app:subs", "Meine Abos", R.drawable.ic_subs));
         }
+        l.add(libItem("app:new", "Neue Playlist", R.drawable.ic_add));
+        for (LocalPlaylists.Playlist p : LocalPlaylists.all()) l.add(LocalPlaylists.asItem(p));
+        return l;
+    }
+
+    private List<Item> libraryFooter() {
+        List<Item> l = new ArrayList<>();
+        l.add(libItem("app:alarms", "Wecker", R.drawable.ic_alarm));
+        l.add(libItem("app:settings", "Einstellungen", R.drawable.ic_settings));
         return l;
     }
 

@@ -29,6 +29,12 @@ public final class Item {
     public long published;
     /** Für eigene Playlists (YouTube-Konto) */
     public String apiPlaylistId;
+    /** Eintrag in einer Konto-Playlist (zum Entfernen/Verschieben) */
+    public String playlistItemId;
+    /** ID einer Playlist auf dem Gerät */
+    public String localPlaylistId;
+    /** Sichtbarkeit einer Konto-Playlist: private / unlisted / public */
+    public String privacy;
     public String extra;
 
     public static Item from(InfoItem ii) {

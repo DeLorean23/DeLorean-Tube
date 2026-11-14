@@ -8,6 +8,8 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.ServiceInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaCodec;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
@@ -26,9 +28,11 @@ import de.delorean23.tube.lame.Mp3Encoder;
 
 import org.schabi.newpipe.extractor.stream.AudioStream;
 import org.schabi.newpipe.extractor.stream.StreamInfo;
+import org.schabi.newpipe.extractor.stream.StreamSegment;
 import org.schabi.newpipe.extractor.stream.VideoStream;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -37,19 +41,29 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 /**
- * Downloads im Hintergrund: MP3 (Ton wird umgewandelt) oder MP4 in gewählter Auflösung
- * (Bild- und Tonspur werden zusammengefügt). Gespeichert in Musik/DeLorean Tube bzw. Filme/DeLorean Tube.
+ * Downloads im Hintergrund:
+ * MP3 (mit Cover, Titel, Interpret, Album), MP4 in gewählter Auflösung,
+ * Kapitel als einzelne MP3s, nur ein Abschnitt (von–bis) und ganze Playlists.
+ * Gespeichert in Musik/DeLorean Tube bzw. Filme/DeLorean Tube (Playlists/Kapitel in eigenem Unterordner).
  * Created by DeLorean23
  */
 public class DownloadService extends Service {
+
+    public static final String MODE_FULL = "full", MODE_CHAPTERS = "chapters", MODE_SECTION = "section";
 
     private static final String FOLDER = "DeLorean Tube";
     private static final long CHUNK = 4L * 1024 * 1024;
@@ -84,22 +98,16 @@ public class DownloadService extends Service {
             if (running.get() == 0) stopSelf();
             return START_NOT_STICKY;
         }
-        final String url = intent.getStringExtra("url");
-        final String title = intent.getStringExtra("title");
-        final String artist = intent.getStringExtra("artist");
-        final boolean mp3 = intent.getBooleanExtra("mp3", true);
-        final int height = intent.getIntExtra("height", 720);
+        final Job job = new Job(notifyIds.getAndIncrement(), intent);
         running.incrementAndGet();
         worker.execute(() -> {
-            int id = notifyIds.getAndIncrement();
             try {
-                Job job = new Job(id, url, title, artist, mp3, height);
                 job.run();
             } catch (Throwable e) {
-                nm.notify(id, base("Download fehlgeschlagen")
-                        .setContentText(title + ": " + e.getMessage())
+                nm.notify(job.id, base("Download fehlgeschlagen")
+                        .setContentText(job.title + ": " + e.getMessage())
                         .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText(title + "\n" + e.getMessage()))
+                                .bigText(job.title + "\n" + e.getMessage()))
                         .setSmallIcon(android.R.drawable.stat_notify_error)
                         .setOngoing(false).setAutoCancel(true).build());
             } finally {
@@ -126,31 +134,60 @@ public class DownloadService extends Service {
                 .setOngoing(true);
     }
 
+    /** Ein Teil der MP3-Ausgabe (ganzes Lied, ein Kapitel oder ein Abschnitt). */
+    private static final class Seg {
+        final long startUs, endUs;
+        final String title;
+        final int track;
+        File file;
+        OutputStream os;
+        Mp3Encoder enc;
+
+        Seg(long startUs, long endUs, String title, int track) {
+            this.startUs = startUs;
+            this.endUs = endUs;
+            this.title = title;
+            this.track = track;
+        }
+    }
+
     // ------------------------------------------------------------------ Auftrag
 
     private final class Job {
         final int id;
-        final String url, title, artist;
+        final String url, title, artist, mode, folder, album;
         final boolean mp3;
-        final int height;
+        final int height, track;
+        final long startMs, endMs;
         long lastNotify;
+        int waiting;
 
-        Job(int id, String url, String title, String artist, boolean mp3, int height) {
+        Job(int id, Intent i) {
             this.id = id;
-            this.url = url;
-            this.title = title != null ? title : "Video";
-            this.artist = artist;
-            this.mp3 = mp3;
-            this.height = height;
+            this.url = i.getStringExtra("url");
+            String t = i.getStringExtra("title");
+            this.title = t != null ? t : "Video";
+            this.artist = i.getStringExtra("artist");
+            this.mp3 = i.getBooleanExtra("mp3", true);
+            this.height = i.getIntExtra("height", 720);
+            String m = i.getStringExtra("mode");
+            this.mode = m != null ? m : MODE_FULL;
+            this.startMs = i.getLongExtra("startMs", 0);
+            this.endMs = i.getLongExtra("endMs", 0);
+            this.folder = i.getStringExtra("folder");
+            this.album = i.getStringExtra("album");
+            this.track = i.getIntExtra("track", 0);
         }
 
         void progress(String step, long done, long total) {
             long now = System.currentTimeMillis();
             if (now - lastNotify < 700 && done < total) return;
             lastNotify = now;
-            int pct = total > 0 ? (int) (done * 100 / total) : 0;
+            int pct = total > 0 ? (int) Math.min(100, done * 100 / total) : 0;
+            int queued = running.get() - 1;
             Notification n = base(title)
-                    .setContentText(step + (total > 0 ? "  " + pct + " %" : ""))
+                    .setContentText(step + (total > 0 ? "  " + pct + " %" : "")
+                            + (queued > 0 ? "  ·  noch " + queued + " in der Warteschlange" : ""))
                     .setProgress(100, pct, total <= 0)
                     .build();
             nm.notify(FG_ID, n);
@@ -164,59 +201,149 @@ public class DownloadService extends Service {
             //noinspection ResultOfMethodCallIgnored
             dir.mkdirs();
             String base = Util.safeFileName(title);
+            String vid = Util.videoId(url);
+            String thumb = vid != null ? "https://i.ytimg.com/vi/" + vid + "/hqdefault.jpg"
+                    : Util.thumb(info.getThumbnails());
+            String videoArtist = artist != null ? artist : info.getUploaderName();
 
             if (mp3) {
                 AudioStream a = Streams.bestAudio(info, true);
                 if (a == null) throw new IOException("Keine Tonspur gefunden");
                 File src = new File(dir, id + "_audio.m4a");
-                File out = new File(dir, id + ".mp3");
+                byte[] cover = cover(vid);
+
+                // Was soll herauskommen?
+                List<Seg> segs = new ArrayList<>();
+                String outFolder = folder;
+                String outAlbum = album;
+                if (MODE_CHAPTERS.equals(mode) && info.getStreamSegments().size() >= 2) {
+                    List<StreamSegment> ch = info.getStreamSegments();
+                    for (int i = 0; i < ch.size(); i++) {
+                        long s = ch.get(i).getStartTimeSeconds() * 1_000_000L;
+                        long e = i + 1 < ch.size() ? ch.get(i + 1).getStartTimeSeconds() * 1_000_000L : Long.MAX_VALUE;
+                        String t = ch.get(i).getTitle();
+                        segs.add(new Seg(s, e, t != null && !t.isEmpty() ? t : "Teil " + (i + 1), i + 1));
+                    }
+                    outFolder = Util.safeFileName(title);
+                    outAlbum = title;
+                } else if (MODE_SECTION.equals(mode) && endMs > startMs) {
+                    segs.add(new Seg(startMs * 1000, endMs * 1000,
+                            title + " (" + Util.duration(startMs / 1000) + "–" + Util.duration(endMs / 1000) + ")",
+                            track));
+                } else {
+                    segs.add(new Seg(0, Long.MAX_VALUE, title, track));
+                }
+
                 try {
                     download(a.getContent(), src, "Ton wird geladen", 0, 1);
-                    toMp3(src, out);
-                    Uri uri = publish(out, base + ".mp3", "audio/mpeg", true);
-                    finished("MP3 gespeichert", base + ".mp3", uri, "audio/mpeg");
+                    for (int i = 0; i < segs.size(); i++) segs.get(i).file = new File(dir, id + "_" + i + ".mp3");
+                    toMp3(src, segs, videoArtist, outAlbum, cover);
+                    int saved = 0;
+                    Uri last = null;
+                    String lastName = null;
+                    for (Seg s : segs) {
+                        if (s.file == null || !s.file.exists() || s.file.length() < 1000) continue;
+                        String name = (segs.size() > 1 ? String.format(Locale.GERMANY, "%02d - ", s.track) : "")
+                                + Util.safeFileName(s.title) + ".mp3";
+                        last = publish(s.file, name, "audio/mpeg", true, outFolder, s.title, videoArtist, outAlbum);
+                        lastName = name;
+                        register(s.title, videoArtist, last, "audio/mpeg", s.file.length(), thumb, outFolder);
+                        saved++;
+                    }
+                    if (saved == 0) throw new IOException("Nichts gespeichert (Abschnitt leer?)");
+                    if (saved == 1) finished("MP3 gespeichert", lastName, last, "audio/mpeg");
+                    else finished(saved + " MP3s gespeichert", outFolder, null, null);
                 } finally {
                     //noinspection ResultOfMethodCallIgnored
                     src.delete();
-                    //noinspection ResultOfMethodCallIgnored
-                    out.delete();
-                }
-            } else {
-                VideoStream v = Streams.videoChoices(info, true).get(height);
-                if (v == null) throw new IOException(height + "p ist nicht mehr verfügbar");
-                File out = new File(dir, id + ".mp4");
-                String name = base + " (" + height + "p).mp4";
-                if (!v.isVideoOnly()) {
-                    try {
-                        download(v.getContent(), out, "Video wird geladen", 0, 1);
-                        Uri uri = publish(out, name, "video/mp4", false);
-                        finished("Video gespeichert", name, uri, "video/mp4");
-                    } finally {
+                    for (Seg s : segs) {
                         //noinspection ResultOfMethodCallIgnored
-                        out.delete();
+                        if (s.file != null) s.file.delete();
                     }
-                    return;
                 }
-                AudioStream a = Streams.bestAudio(info, true);
-                if (a == null) throw new IOException("Keine Tonspur gefunden");
-                File vf = new File(dir, id + "_video.mp4");
-                File af = new File(dir, id + "_audio.m4a");
-                try {
+                return;
+            }
+
+            // ---------------- MP4
+            VideoStream v = pickVideo(Streams.videoChoices(info, true), height);
+            if (v == null) throw new IOException("Für dieses Video gibt es keine MP4-Datei");
+            int h = Streams.height(v);
+            boolean section = MODE_SECTION.equals(mode) && endMs > startMs;
+            long cutStart = section ? startMs * 1000 : 0;
+            long cutEnd = section ? endMs * 1000 : Long.MAX_VALUE;
+            String name = base + (section ? " (" + Util.duration(startMs / 1000) + "–" + Util.duration(endMs / 1000) + ")" : "")
+                    + " (" + Streams.label(v) + ").mp4";
+            File out = new File(dir, id + ".mp4");
+            File vf = new File(dir, id + "_video.mp4");
+            File af = new File(dir, id + "_audio.m4a");
+            try {
+                if (!v.isVideoOnly()) {
+                    // fertige Datei mit Ton
+                    download(v.getContent(), vf, "Video wird geladen", 0, 1);
+                    if (section) {
+                        progress("Wird geschnitten …", 0, 0);
+                        mux(vf, vf, out, cutStart, cutEnd);
+                    } else {
+                        //noinspection ResultOfMethodCallIgnored
+                        vf.renameTo(out);
+                    }
+                } else {
+                    AudioStream a = Streams.bestAudio(info, true);
+                    if (a == null) throw new IOException("Keine Tonspur gefunden");
                     download(v.getContent(), vf, "Bild wird geladen", 0, 2);
                     download(a.getContent(), af, "Ton wird geladen", 1, 2);
                     progress("Wird zusammengefügt …", 0, 0);
-                    mux(vf, af, out);
-                    Uri uri = publish(out, name, "video/mp4", false);
-                    finished("Video gespeichert", name, uri, "video/mp4");
-                } finally {
-                    //noinspection ResultOfMethodCallIgnored
-                    vf.delete();
-                    //noinspection ResultOfMethodCallIgnored
-                    af.delete();
-                    //noinspection ResultOfMethodCallIgnored
-                    out.delete();
+                    mux(vf, af, out, cutStart, cutEnd);
+                }
+                Uri uri = publish(out, name, "video/mp4", false, folder, title, videoArtist, album);
+                register(title, videoArtist, uri, "video/mp4", out.length(), thumb, folder);
+                finished("Video gespeichert (" + h + "p)", name, uri, "video/mp4");
+            } finally {
+                //noinspection ResultOfMethodCallIgnored
+                vf.delete();
+                //noinspection ResultOfMethodCallIgnored
+                af.delete();
+                //noinspection ResultOfMethodCallIgnored
+                out.delete();
+            }
+        }
+
+        /** Gewünschte Höhe oder die beste darunter (bei Playlists), sonst die kleinste. */
+        VideoStream pickVideo(LinkedHashMap<Integer, VideoStream> choices, int wanted) {
+            if (choices.isEmpty()) return null;
+            VideoStream exact = choices.get(wanted);
+            if (exact != null) return exact;
+            VideoStream smallest = null;
+            for (Map.Entry<Integer, VideoStream> e : choices.entrySet()) {
+                smallest = e.getValue();
+                if (e.getKey() <= wanted) return e.getValue(); // absteigend sortiert
+            }
+            return smallest;
+        }
+
+        /** Cover fürs MP3: Vorschaubild quadratisch zugeschnitten. */
+        byte[] cover(String vid) {
+            if (vid == null) return null;
+            for (String q : new String[]{"maxresdefault", "sddefault", "hqdefault"}) {
+                try (Response r = NetDownloader.get().client().newCall(new Request.Builder()
+                        .url("https://i.ytimg.com/vi/" + vid + "/" + q + ".jpg").build()).execute()) {
+                    if (!r.isSuccessful() || r.body() == null) continue;
+                    byte[] data = r.body().bytes();
+                    Bitmap b = BitmapFactory.decodeByteArray(data, 0, data.length);
+                    if (b == null) continue;
+                    int w = b.getWidth(), h = b.getHeight();
+                    // 4:3-Bilder haben oben/unten schwarze Balken: nur den 16:9-Inhalt nehmen
+                    int contentH = Math.abs(w * 3 - h * 4) < w / 10 ? w * 9 / 16 : h;
+                    int side = Math.min(w, contentH);
+                    Bitmap sq = Bitmap.createBitmap(b, (w - side) / 2, (h - side) / 2, side, side);
+                    if (side > 600) sq = Bitmap.createScaledBitmap(sq, 600, 600, true);
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    sq.compress(Bitmap.CompressFormat.JPEG, 90, bos);
+                    return bos.toByteArray();
+                } catch (Throwable ignored) {
                 }
             }
+            return null;
         }
 
         /** Lädt in 4-MB-Stücken (so drosselt YouTube nicht). */
@@ -280,11 +407,14 @@ public class DownloadService extends Service {
             if (pos == 0) throw new IOException("Datei ist leer");
         }
 
-        /** M4A (AAC) -> PCM -> MP3 (192 kbit/s). */
-        void toMp3(File src, File out) throws IOException {
+        /**
+         * M4A (AAC) -> PCM -> MP3 (192 kbit/s), aufgeteilt in die gewünschten Teile
+         * (ganzes Lied, Kapitel oder Abschnitt). Geschnitten wird auf das Sample genau.
+         */
+        void toMp3(File src, List<Seg> segs, String artistName, String albumName, byte[] cover) throws IOException {
             MediaExtractor ex = new MediaExtractor();
             MediaCodec codec = null;
-            try (OutputStream os = new BufferedOutputStream(new FileOutputStream(out))) {
+            try {
                 ex.setDataSource(src.getAbsolutePath());
                 int track = -1;
                 MediaFormat fmt = null;
@@ -299,9 +429,13 @@ public class DownloadService extends Service {
                 }
                 if (track < 0) throw new IOException("Keine Tonspur in der Datei");
                 ex.selectTrack(track);
+                long firstStart = segs.get(0).startUs;
+                if (firstStart > 0) ex.seekTo(firstStart, MediaExtractor.SEEK_TO_PREVIOUS_SYNC);
                 String mime = fmt.getString(MediaFormat.KEY_MIME);
                 long durationUs = fmt.containsKey(MediaFormat.KEY_DURATION)
                         ? fmt.getLong(MediaFormat.KEY_DURATION) : 0;
+                long lastEnd = segs.get(segs.size() - 1).endUs;
+                if (lastEnd != Long.MAX_VALUE && lastEnd < durationUs) durationUs = lastEnd;
                 int sampleRate = fmt.getInteger(MediaFormat.KEY_SAMPLE_RATE);
                 int channels = fmt.getInteger(MediaFormat.KEY_CHANNEL_COUNT);
 
@@ -309,22 +443,27 @@ public class DownloadService extends Service {
                 codec.configure(fmt, null, null, 0);
                 codec.start();
 
-                Mp3Encoder enc = null;
                 MediaCodec.BufferInfo bi = new MediaCodec.BufferInfo();
                 boolean inputDone = false, outputDone = false;
                 byte[] pcm = new byte[0];
                 int outChannels = channels;
                 int outRate = sampleRate;
+                long[] starts = new long[segs.size()], ends = new long[segs.size()];
+                for (int i = 0; i < segs.size(); i++) {
+                    starts[i] = segs.get(i).startUs;
+                    ends[i] = segs.get(i).endUs;
+                }
+                final PcmSplitter splitter = new PcmSplitter(starts, ends);
+                String step = segs.size() > 1 ? "Wird in " + segs.size() + " MP3s umgewandelt" : "Wird in MP3 umgewandelt";
 
-                while (!outputDone) {
+                while (!outputDone && !splitter.done()) {
                     if (!inputDone) {
                         int inIdx = codec.dequeueInputBuffer(10_000);
                         if (inIdx >= 0) {
                             ByteBuffer ib = inputBuffer(codec, inIdx);
                             int size = ex.readSampleData(ib, 0);
                             if (size < 0) {
-                                codec.queueInputBuffer(inIdx, 0, 0, 0,
-                                        MediaCodec.BUFFER_FLAG_END_OF_STREAM);
+                                codec.queueInputBuffer(inIdx, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
                                 inputDone = true;
                             } else {
                                 codec.queueInputBuffer(inIdx, 0, size, ex.getSampleTime(), 0);
@@ -341,10 +480,6 @@ public class DownloadService extends Service {
                             outRate = of.getInteger(MediaFormat.KEY_SAMPLE_RATE);
                     } else if (outIdx >= 0) {
                         if (bi.size > 0) {
-                            if (enc == null) {
-                                enc = new Mp3Encoder(outRate, Math.min(outChannels, 2),
-                                        outRate < 32000 ? 128 : 192, title, artist, os);
-                            }
                             ByteBuffer ob = outputBuffer(codec, outIdx);
                             ob.position(bi.offset);
                             ob.limit(bi.offset + bi.size);
@@ -353,16 +488,45 @@ public class DownloadService extends Service {
                             int len = bi.size;
                             if (outChannels > 2) len = downmix(pcm, bi.size, outChannels);
                             if (ByteOrder.nativeOrder() != ByteOrder.LITTLE_ENDIAN) swap(pcm, len);
-                            enc.encode(pcm, 0, len);
-                            progress("Wird in MP3 umgewandelt", bi.presentationTimeUs, durationUs);
+                            final int ch = Math.min(outChannels, 2);
+                            final int frameBytes = 2 * ch;
+                            final int rate = outRate;
+                            final byte[] data = pcm;
+                            splitter.feed(bi.presentationTimeUs, len / frameBytes, outRate, new PcmSplitter.Sink() {
+                                @Override
+                                public void write(int seg, int fStart, int fEnd) throws IOException {
+                                    Seg sg = segs.get(seg);
+                                    if (sg.enc == null) {
+                                        Mp3Encoder.Tags tags = new Mp3Encoder.Tags(sg.title, artistName);
+                                        tags.album = albumName;
+                                        tags.track = sg.track;
+                                        tags.coverJpeg = cover;
+                                        sg.os = new BufferedOutputStream(new FileOutputStream(sg.file));
+                                        sg.enc = new Mp3Encoder(rate, ch, rate < 32000 ? 128 : 192, tags, sg.os);
+                                    }
+                                    sg.enc.encode(data, fStart * frameBytes, (fEnd - fStart) * frameBytes);
+                                }
+
+                                @Override
+                                public void close(int seg) throws IOException {
+                                    closeSeg(segs.get(seg));
+                                }
+                            });
+                            progress(step, bi.presentationTimeUs - Math.max(0, firstStart),
+                                    Math.max(1, durationUs - Math.max(0, firstStart)));
                         }
                         codec.releaseOutputBuffer(outIdx, false);
                         if ((bi.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM) != 0) outputDone = true;
                     }
                 }
-                if (enc == null) throw new IOException("Kein Ton dekodiert");
-                enc.finish();
+                for (Seg s : segs) closeSeg(s);
             } finally {
+                for (Seg s : segs) {
+                    try {
+                        if (s.os != null) s.os.close();
+                    } catch (IOException ignored) {
+                    }
+                }
                 if (codec != null) {
                     try {
                         codec.stop();
@@ -374,8 +538,22 @@ public class DownloadService extends Service {
             }
         }
 
-        /** Bild (H.264) und Ton (AAC) zu einer MP4-Datei zusammenfügen. */
-        void mux(File video, File audio, File out) throws IOException {
+        void closeSeg(Seg s) throws IOException {
+            if (s.enc != null) {
+                s.enc.finish();
+                s.enc = null;
+            }
+            if (s.os != null) {
+                s.os.close();
+                s.os = null;
+            }
+        }
+
+        /**
+         * Bild (H.264) und Ton (AAC) zu einer MP4-Datei zusammenfügen, optional nur von–bis.
+         * video und audio dürfen dieselbe Datei sein (fertige MP4 mit Ton).
+         */
+        void mux(File video, File audio, File out, long startUs, long endUs) throws IOException {
             MediaExtractor ve = new MediaExtractor();
             MediaExtractor ae = new MediaExtractor();
             MediaMuxer muxer = null;
@@ -392,6 +570,15 @@ public class DownloadService extends Service {
                 MediaFormat vf = ve.getTrackFormat(vt);
                 MediaFormat af = ae.getTrackFormat(at);
                 long durUs = vf.containsKey(MediaFormat.KEY_DURATION) ? vf.getLong(MediaFormat.KEY_DURATION) : 0;
+
+                long base = 0;
+                if (startUs > 0) {
+                    // Video kann nur an einem Schlüsselbild beginnen: das davor nehmen
+                    ve.seekTo(startUs, MediaExtractor.SEEK_TO_PREVIOUS_SYNC);
+                    base = Math.max(0, ve.getSampleTime());
+                    ae.seekTo(base, MediaExtractor.SEEK_TO_CLOSEST_SYNC);
+                }
+                long total = (endUs == Long.MAX_VALUE ? durUs : Math.min(endUs, durUs)) - base;
 
                 muxer = new MediaMuxer(out.getAbsolutePath(), MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4);
                 int mv = muxer.addTrack(vf);
@@ -413,19 +600,25 @@ public class DownloadService extends Service {
                     MediaExtractor ex = takeVideo ? ve : ae;
                     buf.clear();
                     int size = ex.readSampleData(buf, 0);
-                    if (size < 0) {
+                    long t = ex.getSampleTime();
+                    if (size < 0 || t > endUs) {
                         if (takeVideo) vDone = true;
                         else aDone = true;
                         continue;
                     }
+                    long pts = t - base;
+                    if (pts < 0) {
+                        ex.advance();
+                        continue;
+                    }
                     bi.offset = 0;
                     bi.size = size;
-                    bi.presentationTimeUs = ex.getSampleTime();
+                    bi.presentationTimeUs = pts;
                     bi.flags = (ex.getSampleFlags() & MediaExtractor.SAMPLE_FLAG_SYNC) != 0
                             ? MediaCodec.BUFFER_FLAG_KEY_FRAME : 0;
                     muxer.writeSampleData(takeVideo ? mv : ma, buf, bi);
                     ex.advance();
-                    if (takeVideo) progress("Wird zusammengefügt", bi.presentationTimeUs, durUs);
+                    if (takeVideo) progress("Wird zusammengefügt", pts, Math.max(1, total));
                 }
             } finally {
                 if (muxer != null) {
@@ -440,20 +633,23 @@ public class DownloadService extends Service {
             }
         }
 
-        /** In den öffentlichen Ordner kopieren (Musik bzw. Filme). */
-        Uri publish(File file, String displayName, String mime, boolean music) throws IOException {
+        /** In den öffentlichen Ordner kopieren (Musik bzw. Filme, optional Unterordner). */
+        Uri publish(File file, String displayName, String mime, boolean music, String sub,
+                    String tTitle, String tArtist, String tAlbum) throws IOException {
             progress("Wird gespeichert …", 0, 0);
+            String subPath = sub != null && !sub.isEmpty() ? "/" + Util.safeFileName(sub) : "";
             if (Build.VERSION.SDK_INT >= 29) {
                 ContentResolver cr = getContentResolver();
                 ContentValues cv = new ContentValues();
                 cv.put(MediaStore.MediaColumns.DISPLAY_NAME, displayName);
                 cv.put(MediaStore.MediaColumns.MIME_TYPE, mime);
                 cv.put(MediaStore.MediaColumns.RELATIVE_PATH,
-                        (music ? Environment.DIRECTORY_MUSIC : Environment.DIRECTORY_MOVIES) + "/" + FOLDER);
+                        (music ? Environment.DIRECTORY_MUSIC : Environment.DIRECTORY_MOVIES) + "/" + FOLDER + subPath);
                 cv.put(MediaStore.MediaColumns.IS_PENDING, 1);
                 if (music) {
-                    cv.put(MediaStore.Audio.Media.TITLE, title);
-                    if (artist != null) cv.put(MediaStore.Audio.Media.ARTIST, artist);
+                    cv.put(MediaStore.Audio.Media.TITLE, tTitle);
+                    if (tArtist != null) cv.put(MediaStore.Audio.Media.ARTIST, tArtist);
+                    if (tAlbum != null) cv.put(MediaStore.Audio.Media.ALBUM, tAlbum);
                 }
                 Uri collection = music
                         ? MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
@@ -471,7 +667,7 @@ public class DownloadService extends Service {
                 return uri;
             } else {
                 File dir = new File(Environment.getExternalStoragePublicDirectory(
-                        music ? Environment.DIRECTORY_MUSIC : Environment.DIRECTORY_MOVIES), FOLDER);
+                        music ? Environment.DIRECTORY_MUSIC : Environment.DIRECTORY_MOVIES), FOLDER + subPath);
                 //noinspection ResultOfMethodCallIgnored
                 dir.mkdirs();
                 File target = new File(dir, displayName);
@@ -491,18 +687,36 @@ public class DownloadService extends Service {
             }
         }
 
+        void register(String t, String a, Uri uri, String mime, long size, String thumb, String sub) {
+            Downloads.Entry e = new Downloads.Entry();
+            e.title = t;
+            e.artist = a;
+            e.uri = uri.toString();
+            e.mime = mime;
+            e.size = size;
+            e.date = System.currentTimeMillis();
+            e.videoUrl = url;
+            e.thumb = thumb;
+            e.folder = sub;
+            Downloads.add(e);
+        }
+
         void finished(String what, String name, Uri uri, String mime) {
             NotificationCompat.Builder b = new NotificationCompat.Builder(DownloadService.this, App.CH_DOWNLOAD)
                     .setSmallIcon(android.R.drawable.stat_sys_download_done)
                     .setContentTitle(what)
                     .setContentText(name)
                     .setAutoCancel(true);
-            if (Build.VERSION.SDK_INT >= 29) {
-                Intent open = new Intent(Intent.ACTION_VIEW).setDataAndType(uri, mime)
+            Intent open;
+            if (uri != null && Build.VERSION.SDK_INT >= 29) {
+                open = new Intent(Intent.ACTION_VIEW).setDataAndType(uri, mime)
                         .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK);
-                b.setContentIntent(PendingIntent.getActivity(DownloadService.this, id, open,
-                        PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT));
+            } else {
+                open = new Intent(DownloadService.this, DownloadsActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }
+            b.setContentIntent(PendingIntent.getActivity(DownloadService.this, id, open,
+                    PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT));
             nm.notify(id, b.build());
         }
     }

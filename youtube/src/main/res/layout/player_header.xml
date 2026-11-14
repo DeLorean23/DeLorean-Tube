@@ -103,6 +103,18 @@
                 android:drawableLeft="@drawable/ic_like" />
 
             <TextView
+                android:id="@+id/btnDislike"
+                style="@style/ActionButton"
+                android:drawableLeft="@drawable/ic_dislike"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/btnSave"
+                style="@style/ActionButton"
+                android:drawableLeft="@drawable/ic_playlist_add"
+                android:text="Speichern" />
+
+            <TextView
                 android:id="@+id/btnDownload"
                 style="@style/ActionButton"
                 android:drawableLeft="@drawable/ic_download"
@@ -119,6 +131,42 @@
                 style="@style/ActionButton"
                 android:drawableLeft="@drawable/ic_quality"
                 android:text="Qualität" />
+
+            <TextView
+                android:id="@+id/btnSubs"
+                style="@style/ActionButton"
+                android:drawableLeft="@drawable/ic_subtitles"
+                android:text="Untertitel" />
+
+            <TextView
+                android:id="@+id/btnSpeed"
+                style="@style/ActionButton"
+                android:drawableLeft="@drawable/ic_speed"
+                android:text="Tempo" />
+
+            <TextView
+                android:id="@+id/btnAb"
+                style="@style/ActionButton"
+                android:drawableLeft="@drawable/ic_ab"
+                android:text="A–B" />
+
+            <TextView
+                android:id="@+id/btnEq"
+                style="@style/ActionButton"
+                android:drawableLeft="@drawable/ic_equalizer"
+                android:text="Klang" />
+
+            <TextView
+                android:id="@+id/btnQueue"
+                style="@style/ActionButton"
+                android:drawableLeft="@drawable/ic_queue"
+                android:text="Warteschlange" />
+
+            <TextView
+                android:id="@+id/btnTimer"
+                style="@style/ActionButton"
+                android:drawableLeft="@drawable/ic_timer"
+                android:text="Timer" />
 
             <TextView
                 android:id="@+id/btnCast"
@@ -147,6 +195,22 @@
         android:padding="12dp"
         android:textColor="@color/text"
         android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/btnComments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="12dp"
+        android:background="@drawable/chip_bg"
+        android:drawableLeft="@drawable/ic_comment"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical"
+        android:padding="12dp"
+        android:text="Kommentare"
+        android:textColor="@color/text"
+        android:textSize="14sp" />
 
     <TextView
         android:layout_width="match_parent"

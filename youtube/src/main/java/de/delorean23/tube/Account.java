@@ -266,7 +266,7 @@ public final class Account {
         String page = null;
         int guard = 0;
         do {
-            JSONObject o = get("playlists?part=snippet,contentDetails&mine=true&maxResults=50"
+            JSONObject o = get("playlists?part=snippet,contentDetails,status&mine=true&maxResults=50"
                     + (page != null ? "&pageToken=" + page : ""));
             JSONArray items = o.optJSONArray("items");
             if (items != null) {
@@ -282,7 +282,10 @@ public final class Account {
                     it.thumb = sn.optJSONObject("thumbnails") != null
                             ? thumb(sn.optJSONObject("thumbnails")) : null;
                     JSONObject cd = p.optJSONObject("contentDetails");
-                    it.extra = (cd != null ? cd.optInt("itemCount") : 0) + " Videos";
+                    JSONObject st = p.optJSONObject("status");
+                    it.privacy = st != null ? st.optString("privacyStatus", "private") : "private";
+                    it.extra = (cd != null ? cd.optInt("itemCount") : 0) + " Videos · "
+                            + privacyLabel(it.privacy);
                     out.add(it);
                 }
             }
@@ -303,7 +306,8 @@ public final class Account {
             JSONArray items = o.optJSONArray("items");
             if (items != null) {
                 for (int i = 0; i < items.length(); i++) {
-                    JSONObject sn = items.optJSONObject(i).optJSONObject("snippet");
+                    JSONObject pi = items.optJSONObject(i);
+                    JSONObject sn = pi.optJSONObject("snippet");
                     if (sn == null) continue;
                     JSONObject res = sn.optJSONObject("resourceId");
                     if (res == null || !res.has("videoId")) continue;
@@ -317,6 +321,8 @@ public final class Account {
                     if (oc != null) it.uploaderUrl = "https://www.youtube.com/channel/" + oc;
                     it.thumb = sn.optJSONObject("thumbnails") != null
                             ? thumb(sn.optJSONObject("thumbnails")) : null;
+                    it.playlistItemId = pi.optString("id", null);
+                    it.apiPlaylistId = playlistId;
                     out.add(it);
                 }
             }
@@ -397,5 +403,85 @@ public final class Account {
     public static void unsubscribe(String subscriptionId) throws IOException {
         call("DELETE", "subscriptions?id=" + subscriptionId, null);
         Feed.clear();
+    }
+
+    // ---------------------------------------------------------------- Playlists bearbeiten
+
+    public static String privacyLabel(String p) {
+        if ("public".equals(p)) return "Öffentlich";
+        if ("unlisted".equals(p)) return "Nicht gelistet";
+        return "Privat";
+    }
+
+    /** Neue Playlist im Konto, liefert die ID. privacy: private / unlisted / public */
+    public static String createPlaylist(String title, String privacy) throws IOException {
+        try {
+            JSONObject body = new JSONObject()
+                    .put("snippet", new JSONObject().put("title", title))
+                    .put("status", new JSONObject().put("privacyStatus", privacy));
+            return call("POST", "playlists?part=snippet,status", body.toString()).optString("id", null);
+        } catch (org.json.JSONException e) {
+            throw new IOException(e);
+        }
+    }
+
+    public static void updatePlaylist(String id, String title, String privacy) throws IOException {
+        try {
+            JSONObject body = new JSONObject()
+                    .put("id", id)
+                    .put("snippet", new JSONObject().put("title", title))
+                    .put("status", new JSONObject().put("privacyStatus", privacy));
+            call("PUT", "playlists?part=snippet,status", body.toString());
+        } catch (org.json.JSONException e) {
+            throw new IOException(e);
+        }
+    }
+
+    public static void deletePlaylist(String id) throws IOException {
+        call("DELETE", "playlists?id=" + id, null);
+    }
+
+    /** Video zur Playlist hinzufügen, liefert die Eintrags-ID. */
+    public static String addToPlaylist(String playlistId, String videoId) throws IOException {
+        try {
+            JSONObject body = new JSONObject().put("snippet", new JSONObject()
+                    .put("playlistId", playlistId)
+                    .put("resourceId", new JSONObject()
+                            .put("kind", "youtube#video")
+                            .put("videoId", videoId)));
+            return call("POST", "playlistItems?part=snippet", body.toString()).optString("id", null);
+        } catch (org.json.JSONException e) {
+            throw new IOException(e);
+        }
+    }
+
+    public static void removeFromPlaylist(String playlistItemId) throws IOException {
+        call("DELETE", "playlistItems?id=" + playlistItemId, null);
+    }
+
+    /** Eintrag an eine neue Position schieben (0 = ganz oben). */
+    public static void movePlaylistItem(String playlistItemId, String playlistId, String videoId,
+                                        int position) throws IOException {
+        try {
+            JSONObject body = new JSONObject()
+                    .put("id", playlistItemId)
+                    .put("snippet", new JSONObject()
+                            .put("playlistId", playlistId)
+                            .put("position", position)
+                            .put("resourceId", new JSONObject()
+                                    .put("kind", "youtube#video")
+                                    .put("videoId", videoId)));
+            call("PUT", "playlistItems?part=snippet", body.toString());
+        } catch (org.json.JSONException e) {
+            throw new IOException(e);
+        }
+    }
+
+    /** Eintrags-ID, wenn das Video schon in der Playlist ist, sonst null. */
+    public static String findInPlaylist(String playlistId, String videoId) throws IOException {
+        JSONObject o = get("playlistItems?part=id&maxResults=1&playlistId=" + playlistId + "&videoId=" + videoId);
+        JSONArray items = o.optJSONArray("items");
+        if (items != null && items.length() > 0) return items.optJSONObject(0).optString("id", null);
+        return null;
     }
 }
